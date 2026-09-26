@@ -1,5 +1,56 @@
-import { useEffect, useState } from 'react';
-import { inr, initials, kg } from '../lib/format.js';
+import { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { inr, initials } from '../lib/format.js';
+
+// Fix Leaflet's default marker icon paths bug in Vite
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
+
+// Custom Icon Creator function with HTML/SVG matching app's design system
+const createCustomIcon = (iconName, labelText, tone = 'primary', pulse = false) => {
+  const bgColors = {
+    primary: '#2E7D32', // dark green circular pin for Junkcleaner/vehicle
+    accent: '#1565C0',  // blue
+    warn: '#F9A825',    // amber
+    muted: '#FFFFFF',   // white
+    secondary: '#1B5E20'
+  };
+
+  const textColors = {
+    primary: '#FFFFFF',
+    accent: '#FFFFFF',
+    warn: '#FFFFFF',
+    muted: '#2E7D32',
+    secondary: '#FFFFFF'
+  };
+
+  const bgColor = bgColors[tone] || bgColors.primary;
+  const textColor = textColors[tone] || textColors.primary;
+
+  const html = `
+    <div style="position: relative; display: flex; flex-direction: column; items-center; justify-content: center; transform: translate(-50%, -50%); cursor: pointer;">
+      ${pulse ? `<div style="position: absolute; width: 36px; height: 36px; border-radius: 50%; background-color: rgba(46, 125, 50, 0.4); animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; top: 0; left: 0;"></div>` : ''}
+      <div style="position: relative; width: 36px; height: 36px; border-radius: 50%; background-color: ${bgColor}; color: ${textColor}; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 2px solid white;">
+        <span class="material-symbols-outlined" style="font-size: 20px; font-variation-settings: 'FILL' 1;">${iconName}</span>
+      </div>
+      ${labelText ? `<div style="white-space: nowrap; border-radius: 6px; background-color: rgba(255, 255, 255, 0.95); padding: 2px 8px; font-size: 11px; font-weight: 600; color: #1c1b1f; box-shadow: 0 1px 3px rgba(0,0,0,0.12); margin-top: 4px; text-align: center;">${labelText}</div>` : ''}
+    </div>
+  `;
+
+  return L.divIcon({
+    html,
+    className: 'custom-leaflet-marker',
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -18],
+  });
+};
 
 export function Icon({ name, fill = false, size = 20, className = '' }) {
   return (
@@ -180,7 +231,6 @@ export function Stepper({ steps, active }) {
   );
 }
 
-// Payment split ledger, shared by resident history and NGO payments.
 export function SplitModal({ payment, onClose, title, subtitle }) {
   if (!payment) return null;
   return (
@@ -211,47 +261,74 @@ export function SplitModal({ payment, onClose, title, subtitle }) {
   );
 }
 
-// ---- Stylised map used by request feed, tracking and active job ----
+// REAL OPENSTREETMAP COORDINATES (SIES Graduate School of Technology, Nerul, Navi Mumbai)
+const SIES_GST_CENTER = [19.0304, 73.0297];
+
+// Converts relative percentage positions (0-100) to lat/lng offsets around SIES GST Nerul
+function percentToLatLng(x, y) {
+  const latOffset = (50 - y) * 0.0003;
+  const lngOffset = (x - 50) * 0.0003;
+  return [SIES_GST_CENTER[0] + latOffset, SIES_GST_CENTER[1] + lngOffset];
+}
+
 export function MapCanvas({ children, className = '', zoomable = true }) {
-  const [zoom, setZoom] = useState(1);
   return (
     <div className={`relative overflow-hidden rounded-xl border border-outline-variant/40 bg-[#f2efe9] ${className}`}>
-      <div className="absolute inset-0 origin-center transition-transform duration-300" style={{ transform: `scale(${zoom})` }}>
-        <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" className="h-full w-full" fontFamily="Inter, Arial, sans-serif">
-          <rect width="800" height="500" fill="#f2efe9" />
-          <rect x="40" y="50" width="170" height="120" rx="6" fill="#c8e6c9" />
-          <rect x="590" y="310" width="190" height="150" rx="6" fill="#c8e6c9" />
-          <path d="M-10 420 C 120 380, 200 470, 340 440 S 520 470, 810 400 L 810 510 L -10 510 Z" fill="#aadaff" />
-          <g fill="#e6e2d8"><rect x="240" y="40" width="80" height="60" /><rect x="450" y="30" width="90" height="70" /><rect x="620" y="60" width="120" height="80" /><rect x="60" y="230" width="110" height="70" /><rect x="470" y="330" width="90" height="60" /></g>
-          <g stroke="#dadce0" strokeWidth="18" fill="none" strokeLinecap="round"><path d="M-20 130 L 820 170" /><path d="M560 -20 L 600 520" /><path d="M-20 260 L 820 300" /><path d="M200 -20 L 180 520" /></g>
-          <g stroke="#ffffff" strokeWidth="14" fill="none" strokeLinecap="round"><path d="M-20 130 L 820 170" /><path d="M560 -20 L 600 520" /><path d="M-20 260 L 820 300" /><path d="M200 -20 L 180 520" /></g>
-          <path d="M-20 320 C 200 250, 420 380, 820 240" stroke="#e8b84a" strokeWidth="24" fill="none" />
-          <path d="M-20 320 C 200 250, 420 380, 820 240" stroke="#fce08c" strokeWidth="18" fill="none" />
-          <path d="M290 -20 C 310 160, 430 300, 410 520" stroke="#e8b84a" strokeWidth="22" fill="none" />
-          <path d="M290 -20 C 310 160, 430 300, 410 520" stroke="#fce08c" strokeWidth="16" fill="none" />
-          <g fontSize="11" fill="#5f6368"><text x="70" y="115">Riverside Park</text><text x="620" y="395">Central Park</text><text x="330" y="150" transform="rotate(4 330 150)">Golf Course Rd</text><text x="60" y="292">Sector 5 Inner Ring Rd</text><text x="60" y="470" fill="#3a7bbf">Yamuna Canal</text></g>
-        </svg>
-      </div>
-      <div className="absolute inset-0">{children}</div>
-      {zoomable && (
-        <div className="absolute bottom-space-md right-space-md flex flex-col overflow-hidden rounded-lg border border-outline-variant/50 bg-white shadow">
-          <button type="button" aria-label="Zoom in" onClick={() => setZoom((z) => Math.min(1.6, +(z + 0.2).toFixed(1)))} className="flex h-9 w-9 items-center justify-center hover:bg-surface-container-low"><Icon name="add" /></button>
-          <button type="button" aria-label="Zoom out" onClick={() => setZoom((z) => Math.max(1, +(z - 0.2).toFixed(1)))} className="flex h-9 w-9 items-center justify-center border-t border-outline-variant/50 hover:bg-surface-container-low"><Icon name="remove" /></button>
-        </div>
-      )}
+      <MapContainer
+        center={SIES_GST_CENTER}
+        zoom={15}
+        scrollWheelZoom={zoomable}
+        zoomControl={zoomable}
+        className="h-full w-full z-0"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {children}
+      </MapContainer>
     </div>
   );
 }
 
-const PIN_TONE = { primary: 'bg-primary-container text-on-primary', accent: 'bg-secondary-container text-on-secondary-container', warn: 'bg-amber-400 text-white', muted: 'bg-white text-primary border border-outline-variant' };
-export function Pin({ x, y, icon, label, tone = 'primary', pulse = false, style }) {
+export function Pin({ x, y, lat, lng, icon, label, tone = 'primary', pulse = false, style, onClick }) {
+  const [position, setPosition] = useState(() => {
+    if (lat != null && lng != null) return [lat, lng];
+    if (x != null && y != null) return percentToLatLng(x, y);
+    return SIES_GST_CENTER;
+  });
+
+  useEffect(() => {
+    if (lat != null && lng != null) {
+      setPosition([lat, lng]);
+    } else if (x != null && y != null) {
+      setPosition(percentToLatLng(x, y));
+    }
+  }, [x, y, lat, lng]);
+
+  const customIcon = createCustomIcon(icon, label, tone, pulse);
+
   return (
-    <div className="absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 transition-all duration-1000 ease-linear" style={{ left: `${x}%`, top: `${y}%`, ...style }}>
-      <span className="relative flex">
-        {pulse && <span className="absolute inset-0 animate-ping rounded-full bg-primary-container/40" />}
-        <span className={`relative flex h-9 w-9 items-center justify-center rounded-full shadow-md ring-2 ring-white ${PIN_TONE[tone]}`}><Icon name={icon} size={18} fill /></span>
-      </span>
-      {label && <span className="whitespace-nowrap rounded-md bg-white/95 px-2 py-0.5 font-label-sm text-label-sm text-on-surface shadow-sm">{label}</span>}
-    </div>
+    <Marker
+      position={position}
+      icon={customIcon}
+      eventHandlers={{
+        click: () => onClick && onClick(),
+      }}
+    >
+      {label && <Popup>{label}</Popup>}
+    </Marker>
+  );
+}
+
+export function MapRoute({ from, to, color = '#2E7D32', dashArray = '8 8' }) {
+  const fromPos = from.lat != null ? [from.lat, from.lng] : percentToLatLng(from.x, from.y);
+  const toPos = to.lat != null ? [to.lat, to.lng] : percentToLatLng(to.x, to.y);
+
+  return (
+    <Polyline
+      positions={[fromPos, toPos]}
+      pathOptions={{ color, dashArray, weight: 4 }}
+    />
   );
 }

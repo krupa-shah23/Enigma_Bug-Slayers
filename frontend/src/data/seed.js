@@ -138,7 +138,7 @@ export const seed = () => ({
 
   // ---- Person / society ----
   society: {
-    frequency: 'Bi-weekly', nextPickup: 'Nov 07, 2025', slot: '08:30 AM – 11:00 AM', surgeDate: '2025-11-10', surgeAccepted: false,
+    frequency: 'Bi-weekly', nextPickup: '30 September 2026', slot: '08:30 AM – 11:00 AM', collectorEta: '10:30 AM', surgeDate: '2025-11-10', surgeAccepted: false,
     stagingYard: 'Block B Covered Bay (Capacity 2,500 kg)', treasurerFlat: 'Flat C-102',
     material: { compost: 620, dry: 450, ewaste: 45, haz: 12 },
     yieldTotal: 1040.5, creditThisCycle: 572.5,
@@ -215,10 +215,14 @@ export const seed = () => ({
 
   // ---- Exchange: lots, quotes, jobs ----
   lots: [
-    { id: 'EX-4092', reqId: 'REQ-2025-0914', title: 'Household E-Waste & Small Appliances', category: 'E-waste', kg: 18, desc: 'Old CRT monitor, vintage radio, blender, assorted copper wiring and chargers. Approx 18kg.', items: 'CRT Monitor, Toaster, Blender, Wire Cables', grade: 'High Value Grade', owner: 'Ananya Sharma', ownerId: 'ananya', flat: 'Flat C-402', address: 'Plot 14, Riverside Ave, Sector 5', dist: 0.9, expires: '12 mins left', posted: '2 hours ago', status: 'open', jobId: null, suggested: 1440, photoCount: 5,
-      sim: [{ collectorId: 'ramesh', price: 1440, eta: 20, delay: 5000 }] },
-    { id: 'EX-4098', reqId: 'REQ-2025-0899', title: 'Decommissioned Copper Pipes & Brass Fittings', category: 'Metals & Brass', kg: 12, desc: 'Copper pipes, brass fittings from plumbing renovation (12kg). Cleaned, unmixed alloys.', items: 'Cleaned plumber scrap, unmixed alloys', grade: 'Premium Scrap', owner: 'Ananya Sharma', ownerId: 'ananya', flat: 'Flat C-402', address: 'Sector 5 Inner Ring Rd', dist: 1.4, expires: 'Expires in 28m', posted: 'Yesterday', status: 'open', jobId: null, suggested: 4200, photoCount: 2,
-      sim: [] },
+    {
+      id: 'EX-4092', reqId: 'REQ-2025-0914', title: 'Household E-Waste & Small Appliances', category: 'E-waste', kg: 18, desc: 'Old CRT monitor, vintage radio, blender, assorted copper wiring and chargers. Approx 18kg.', items: 'CRT Monitor, Toaster, Blender, Wire Cables', grade: 'High Value Grade', owner: 'Ananya Sharma', ownerId: 'ananya', flat: 'Flat C-402', address: 'Plot 14, Riverside Ave, Sector 5', dist: 0.9, expires: '12 mins left', posted: '2 hours ago', status: 'open', jobId: null, suggested: 1440, photoCount: 5,
+      sim: [{ collectorId: 'ramesh', price: 1440, eta: 20, delay: 5000 }]
+    },
+    {
+      id: 'EX-4098', reqId: 'REQ-2025-0899', title: 'Decommissioned Copper Pipes & Brass Fittings', category: 'Metals & Brass', kg: 12, desc: 'Copper pipes, brass fittings from plumbing renovation (12kg). Cleaned, unmixed alloys.', items: 'Cleaned plumber scrap, unmixed alloys', grade: 'Premium Scrap', owner: 'Ananya Sharma', ownerId: 'ananya', flat: 'Flat C-402', address: 'Sector 5 Inner Ring Rd', dist: 1.4, expires: 'Expires in 28m', posted: 'Yesterday', status: 'open', jobId: null, suggested: 4200, photoCount: 2,
+      sim: []
+    },
     { id: 'EX-4085', reqId: 'REQ-2025-0885', title: 'Aluminium Cans & Tin Scrap', category: 'Metals & Brass', kg: 28, desc: 'Crushed aluminium cans and tin scrap, dry and unmixed.', items: 'Crushed cans, tin sheets', grade: 'Standard Scrap', owner: 'Priya Sen', ownerId: 'priya', flat: 'Flat B-108', address: 'Block B, Green Valley Heights', dist: 0.4, expires: 'Bidded 8m ago', posted: '1 hour ago', status: 'open', jobId: null, suggested: 3220, photoCount: 3, sim: [] },
     { id: 'EX-4071', reqId: 'REQ-2025-0842', title: 'Corrugated Boxes from Home Moving', category: 'Paper & Cardboard', kg: 35, desc: 'Corrugated boxes from home moving (35kg), flattened and tied.', items: 'Flattened corrugated boxes', grade: 'Standard Scrap', owner: 'Ananya Sharma', ownerId: 'ananya', flat: 'Flat C-402', address: 'Plot 14, Riverside Ave, Sector 5', dist: 0.9, expires: '', posted: 'Yesterday', status: 'accepted', jobId: 'JOB-8839', suggested: 315, photoCount: 1, sim: [] },
   ],
@@ -232,13 +236,15 @@ export const seed = () => ({
   jobs: [
     { id: 'JOB-8839', lotId: 'EX-4071', collectorId: 'ramesh', resident: 'Ananya Sharma', phone: '+91 98765 43210', address: 'Plot 14, Riverside Avenue, Sector 5, Block C Gate', title: 'Corrugated Boxes Pickup', desc: 'Corrugated boxes from home moving, flattened and tied.', declaredKg: 35, price: 315, step: 0, etaMin: 8, distKm: 0.9, route: 'A-14', proposal: null, dispute: null, closed: false },
   ],
-  bhang: { online: true, history: [
-    { id: 'bh1', date: 'Oct 24, 2025', item: 'Old Inverter Batteries & Wiring (14 kg)', resident: 'Ananya Sharma', amount: 1180 },
-    { id: 'bh2', date: 'Oct 22, 2025', item: 'Copper Pipes & Fittings (6 kg)', resident: 'Vikram Malhotra', amount: 2040 },
-    { id: 'bh3', date: 'Oct 19, 2025', item: 'Cardboard Shipping Cartons (35 kg)', resident: 'Priya Sen', amount: 315 },
-    { id: 'bh4', date: 'Oct 15, 2025', item: 'Assorted Plastic Crates (22 kg)', resident: 'Rahul Mehta', amount: 396 },
-    { id: 'bh5', date: 'Oct 11, 2025', item: 'Aluminium Scrap & Cans (15 kg)', resident: 'Amit Verma', amount: 1725 },
-  ], earnings: 48760, runs: 62 },
+  bhang: {
+    online: true, history: [
+      { id: 'bh1', date: 'Oct 24, 2025', item: 'Old Inverter Batteries & Wiring (14 kg)', resident: 'Ananya Sharma', amount: 1180 },
+      { id: 'bh2', date: 'Oct 22, 2025', item: 'Copper Pipes & Fittings (6 kg)', resident: 'Vikram Malhotra', amount: 2040 },
+      { id: 'bh3', date: 'Oct 19, 2025', item: 'Cardboard Shipping Cartons (35 kg)', resident: 'Priya Sen', amount: 315 },
+      { id: 'bh4', date: 'Oct 15, 2025', item: 'Assorted Plastic Crates (22 kg)', resident: 'Rahul Mehta', amount: 396 },
+      { id: 'bh5', date: 'Oct 11, 2025', item: 'Aluminium Scrap & Cans (15 kg)', resident: 'Amit Verma', amount: 1725 },
+    ], earnings: 48760, runs: 62
+  },
 
   notifications: {
     Person: [

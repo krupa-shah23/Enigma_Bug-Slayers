@@ -90,8 +90,9 @@ export default function Home() {
         <article className="card card-hover flex flex-col justify-between gap-space-md">
           <div className="flex items-center justify-between"><span className="font-label-lg text-on-surface-variant">Next Collection Date</span><span className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-container-low text-primary-container"><Icon name="calendar_today" size={22} fill /></span></div>
           <div>
-            <div className="font-headline-xl text-headline-xl font-bold tracking-tight">{society.nextPickup}</div>
+            <div className="font-headline-xl text-headline-xl font-bold tracking-tight">{society.nextPickup || '30 September 2026'}</div>
             <p className="mt-1 flex items-center gap-1 text-body-sm text-on-surface-variant"><Icon name="schedule" size={16} className="text-secondary" />Morning Slot: {society.slot}</p>
+            <p className="mt-1.5 flex items-center gap-1 text-body-sm font-medium text-primary"><Icon name="local_shipping" size={16} />Collector ETA: {society.collectorEta || '10:30 AM'}</p>
           </div>
         </article>
         <article className="card card-hover flex flex-col justify-between gap-space-md">

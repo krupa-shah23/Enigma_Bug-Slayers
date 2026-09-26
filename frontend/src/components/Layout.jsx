@@ -10,9 +10,9 @@ export const ROLE_META = {
 };
 
 const NAV = {
-  Person: [['Home', '/home'], ['Societies', '/societies'], ['My Society', '/my-society'], ['Exchange', '/exchange'], ['History', '/history'], ['Profile', '/profile']],
-  Ngo: [['Dashboard', '/ngo/dashboard'], ['Societies', '/ngo/societies'], ['Contracts', '/ngo/contracts'], ['Collections', '/ngo/collections'], ['Payments', '/ngo/payments'], ['Events', '/ngo/events'], ['Profile', '/ngo/verification']],
-  Bhangarwala: [['Requests', '/bhangarwala/requests'], ['Active Job', '/bhangarwala/active-job'], ['History', '/bhangarwala/history'], ['Profile', '/bhangarwala/profile']],
+  Person: [['Home', '/home'], ['Societies', '/societies'], ['My Society', '/my-society'], ['Exchange', '/exchange'], ['History', '/history']],
+  Ngo: [['Dashboard', '/ngo/dashboard'], ['Societies', '/ngo/societies'], ['Contracts', '/ngo/contracts'], ['Collections', '/ngo/collections'], ['Payments', '/ngo/payments'], ['Events', '/ngo/events']],
+  Bhangarwala: [['Requests', '/bhangarwala/requests'], ['Active Job', '/bhangarwala/active-job'], ['History', '/bhangarwala/history']],
 };
 
 export function Logo({ to = '/', light = false }) {
