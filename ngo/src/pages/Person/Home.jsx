@@ -1,252 +1,339 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar } from '../../components/index.jsx';
+import { Link, useNavigate } from 'react-router-dom';
+import { Navbar, Footer } from '../../components/index.jsx';
 
-export default function Home(){
-  const [notice,setNotice]=useState('');
-  const handleSubmit=(event)=>{event.preventDefault();setNotice('Submitted successfully.');};
-  return <div className="bg-[#F5F7F6] font-body-md text-on-surface antialiased"><div className="min-h-screen" onSubmit={handleSubmit}><header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-gray-200"><div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between"><div className="flex items-center gap-space-sm"><img alt="ReWaste Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZimPwqvNO5WBOD_Rr6DrxoFMG9U7zp-_fA8lYNGY_YUTus1BXwWVvqCq2vAkd1inpXBz7YGFuKubvo8a2k-YT6CEQst72AhHKNbk4Wov6WvbuvA_1JPsy564A0qOyka9DCmxpACzZ8OsJmOiTcvhVN8WirT4gjLSAaC1jNGwZHBweKLc4cOBIwvuml0rB5HGeCFdZwTwvsFkXyDjUlmBiMv4h54GnAgwiEpoFSVeDDqJHmQWBy0rbew"/><span className="font-headline-md text-headline-md tracking-tight text-primary font-bold hidden sm:inline-block">ReWaste</span></div><Navbar variant="Person" className="hidden md:flex items-center gap-gutter"><Link className="transition-colors py-1 text-primary-container font-headline-sm" to="/home">Home</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/societies">All Societies</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/my-society">My Society</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/exchange">Exchange</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/profile">Profile</Link></Navbar><div className="flex items-center gap-space-md"><button aria-label="Notifications" className="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span className="material-symbols-outlined text-headline-md">notifications</span></button><span className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">Person</span><div className="flex items-center"><img alt="Profile" className="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPgf1R8-C9KtO74b0DTwy8-hSJibHRzegzP7HZ2l7U_XyJaXe2XIJV1NvvNf8Yb3YyWBe-t9mtW_W0aaYglDw8zqDhXx2Qn3j9fP6s2nNL4cdjJsbeidTrZ-jbDDNjjjBy-_3Th_O8c8oKoTm_ihFtdU5TTYi8csrr-mD2LddOyEHyHzscf2nQOqnKgG8M790yl9XYy0F8BkDRzJL-g5Ia0Vn3M_hcoSDyK3EJqGaCI4BQTt25MJQJHQ"/></div></div></div></header><main className="w-full pt-16 bg-[#F5F7F6]"><div className="max-w-7xl mx-auto px-6 py-8"><div className="flex flex-col w-full relative">
+export default function Home() {
+  const navigate = useNavigate();
+  const [notice, setNotice] = useState('');
+  const [hideToast, setHideToast] = useState(false);
+  const [rsvpState, setRsvpState] = useState({ 1: false, 2: false, 3: false });
 
-<div className="fixed top-20 right-6 z-50 max-w-sm w-full bg-surface-container-lowest shadow-xl rounded-xl p-space-md flex items-start gap-space-sm transition-all duration-500 ease-out transform translate-y-0 opacity-100" id="live-status-toast">
-<div className="p-space-xs rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
-<span className="material-symbols-outlined text-headline-sm" style={{fontVariationSettings: "'FILL' 1"}}>local_shipping</span>
-</div>
-<div className="flex flex-col flex-1 min-w-0">
-<div className="flex items-center justify-between gap-space-xs">
-<span className="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Live Dispatch</span>
-<span className="font-body-sm text-body-sm text-outline">Just now</span>
-</div>
-<p className="font-body-md text-body-md text-on-surface mt-0.5 leading-snug">
-<span className="font-label-md text-label-md text-primary font-semibold">S05:</span> Bhangarwala Ramesh has updated pickup status to <span className="font-label-md text-label-md text-primary bg-primary-fixed/30 px-1.5 py-0.5 rounded">Arrived</span>
-</p>
-</div>
-<button aria-label="Dismiss toast" className="text-outline hover:text-on-surface p-1 rounded transition-colors" type="button">
-<span className="material-symbols-outlined text-headline-sm">close</span>
-</button>
-</div>
+  const toggleRsvp = (id) => {
+    setRsvpState(prev => ({ ...prev, [id]: !prev[id] }));
+    setNotice(!rsvpState[id] ? 'RSVP confirmed for event!' : 'RSVP cancelled.');
+    setTimeout(() => setNotice(''), 3000);
+  };
 
-<div className="w-full mb-space-lg">
-<div className="w-full bg-surface-container-lowest rounded-xl shadow-sm p-space-md md:p-space-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md relative overflow-hidden">
-<div className="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary-container"></div>
-<div className="flex items-center gap-space-md pl-space-xs">
-<div className="relative shrink-0">
-<img className="w-12 h-12 rounded-full object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhhZitNYlppv5xZOz4jHI-OnvlD7HcJsYyHrR2elMY1Yw2Z2VvF9SEcGHatJOrqJzhiCnWwpfKFedF9aN5EW7RVnTGxTbI3HKW1EtMQ1VhsgdMJ4ojl1-h4FIgMG7yzfu9gvic4GfVVe96PXEPWtGOr1vCK1Kn8Zg28o3r_4EAPsj_yvHrorQEfa815yG2ClDdlCPpxDaeX25dqgMdReTzNtY4KvOPcua06NiGXXT1oQzwT9YPI_0RVA"/>
-<span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-primary-container rounded-full ring-2 ring-surface-container-lowest"></span>
-</div>
-<div className="flex flex-col">
-<div className="flex items-center gap-space-sm flex-wrap">
-<h2 className="font-headline-sm text-headline-sm text-on-surface font-semibold">Ramesh Kumar</h2>
-<span className="inline-flex items-center gap-1.5 bg-secondary-fixed/50 text-on-secondary-fixed px-2.5 py-0.5 rounded-full font-label-sm text-label-sm">
-<span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
-              Driver En Route
-            </span>
-</div>
-<p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Assigned Collector • Electric Trike Route #A-14</p>
-</div>
-</div>
-<div className="flex items-center gap-space-sm w-full md:w-auto self-end md:self-center">
-<Link className="w-full md:w-auto inline-flex items-center justify-center gap-space-xs bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg px-5 py-2.5 rounded-lg shadow-sm transition-all duration-200" to="/home">
-<span className="material-symbols-outlined text-headline-sm">near_me</span>
-          Track Pickup
-        </Link>
-</div>
-</div>
-</div>
+  return (
+    <div className="bg-[#F5F7F6] font-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between">
+      <Navbar variant="Person" />
 
-<div className="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-space-lg">
+      <main className="w-full pt-16 bg-[#F5F7F6] flex-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col w-full relative">
+            
+            {notice && (
+              <div className="mb-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-medium text-sm flex items-center gap-2">
+                <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                <span>{notice}</span>
+              </div>
+            )}
 
-<div className="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col justify-between transition-shadow hover:shadow-md">
-<div className="flex items-center justify-between mb-space-md">
-<span className="font-label-lg text-label-lg text-on-surface-variant font-medium">Fee Credit This Cycle</span>
-<div className="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary-container">
-<span className="material-symbols-outlined text-headline-md">account_balance_wallet</span>
-</div>
-</div>
-<div>
-<div className="font-display-lg text-display-lg font-bold text-on-surface tracking-tight">$42.50</div>
-<p className="font-body-sm text-body-sm text-primary mt-1 flex items-center gap-1">
-<span className="material-symbols-outlined text-body-md">trending_up</span>
-          Credited toward next maintenance fee
-        </p>
-</div>
-</div>
+            {/* Live Dispatch Toast */}
+            {!hideToast && (
+              <div className="fixed top-20 right-6 z-40 max-w-sm w-full bg-white shadow-xl rounded-2xl p-4 border border-gray-100 flex items-start gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="p-2 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[20px]">local_shipping</span>
+                </div>
+                <div className="flex flex-col flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-label-sm text-xs text-emerald-800 uppercase tracking-wider font-bold">Live Dispatch</span>
+                    <span className="font-body-sm text-[11px] text-outline">Just now</span>
+                  </div>
+                  <p className="font-body-md text-sm text-on-surface mt-0.5 leading-snug">
+                    <span className="font-bold text-primary">S05:</span> Bhangarwala Ramesh has updated pickup status to <span className="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold text-xs">Arrived</span>
+                  </p>
+                </div>
+                {/* FIXED: Working Dismiss button */}
+                <button
+                  aria-label="Dismiss toast"
+                  onClick={() => setHideToast(true)}
+                  className="text-gray-400 hover:text-gray-600 p-1 rounded-lg transition-colors cursor-pointer"
+                  type="button"
+                >
+                  <span className="material-symbols-outlined text-[18px]">close</span>
+                </button>
+              </div>
+            )}
 
-<div className="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col justify-between transition-shadow hover:shadow-md">
-<div className="flex items-center justify-between mb-space-md">
-<span className="font-label-lg text-label-lg text-on-surface-variant font-medium">Next Collection Date</span>
-<div className="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary-container">
-<span className="material-symbols-outlined text-headline-md">calendar_today</span>
-</div>
-</div>
-<div>
-<div className="font-headline-xl text-headline-xl font-bold text-on-surface tracking-tight">Oct 28, 2025</div>
-<p className="font-body-sm text-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
-<span className="material-symbols-outlined text-body-md text-secondary">schedule</span>
-          Morning Slot: 08:30 AM – 11:00 AM
-        </p>
-</div>
-</div>
+            {/* Active Dispatch Card */}
+            <div className="w-full mb-6">
+              <div className="w-full bg-white rounded-2xl border border-gray-200 shadow-sm p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#0d631b]"></div>
+                <div className="flex items-center gap-4 pl-2">
+                  <div className="relative shrink-0">
+                    <img
+                      className="w-12 h-12 rounded-full object-cover shadow-sm ring-2 ring-emerald-600/30"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhhZitNYlppv5xZOz4jHI-OnvlD7HcJsYyHrR2elMY1Yw2Z2VvF9SEcGHatJOrqJzhiCnWwpfKFedF9aN5EW7RVnTGxTbI3HKW1EtMQ1VhsgdMJ4ojl1-h4FIgMG7yzfu9gvic4GfVVe96PXEPWtGOr1vCK1Kn8Zg28o3r_4EAPsj_yvHrorQEfa815yG2ClDdlCPpxDaeX25dqgMdReTzNtY4KvOPcua06NiGXXT1oQzwT9YPI_0RVA"
+                      alt="Driver"
+                    />
+                    <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full ring-2 ring-white"></span>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h2 className="font-headline-sm text-base text-on-surface font-bold">Ramesh Kumar</h2>
+                      <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-label-sm text-xs font-bold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                        Driver En Route
+                      </span>
+                    </div>
+                    <p className="font-body-sm text-xs text-on-surface-variant mt-0.5">Assigned Collector • Electric Trike Route #A-14</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 w-full md:w-auto self-end md:self-center">
+                  <Link
+                    to="/exchange"
+                    className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0d631b] hover:bg-[#0b4d16] text-white font-label-lg text-sm font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">near_me</span>
+                    <span>Track Pickup</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
 
-<div className="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col justify-between transition-shadow hover:shadow-md">
-<div className="flex items-center justify-between mb-space-md">
-<span className="font-label-lg text-label-lg text-on-surface-variant font-medium">Society Trust Score</span>
-<div className="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary-container">
-<span className="material-symbols-outlined text-headline-md" style={{fontVariationSettings: "'FILL' 1"}}>verified_user</span>
-</div>
-</div>
-<div className="flex items-center justify-between gap-space-md">
-<div>
-<div className="font-display-lg text-display-lg font-bold text-on-surface tracking-tight">92<span className="font-headline-md text-headline-md text-outline font-normal">/100</span></div>
-<span className="inline-flex items-center gap-1 mt-1 bg-surface-container-low text-primary font-label-sm text-label-sm px-2 py-0.5 rounded-full">
-            Tier A Verified
-          </span>
-</div>
+            {/* Quick Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-label-lg text-sm text-on-surface-variant font-semibold">Fee Credit This Cycle</span>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="font-display-lg text-3xl font-bold text-on-surface tracking-tight">₹ 3,450.00</div>
+                  <p className="font-body-sm text-xs text-primary mt-1 flex items-center gap-1 font-semibold">
+                    <span className="material-symbols-outlined text-[16px]">trending_up</span>
+                    Credited toward next maintenance fee
+                  </p>
+                </div>
+              </div>
 
-<div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
-<svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-<path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
-<path className="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="92, 100" strokeLinecap="round" strokeWidth="3.5"></path>
-</svg>
-<span className="absolute font-label-md text-label-md text-primary font-bold">92%</span>
-</div>
-</div>
-</div>
-</div>
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-label-lg text-sm text-on-surface-variant font-semibold">Next Collection Date</span>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-[20px]">calendar_today</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="font-headline-xl text-2xl font-bold text-on-surface tracking-tight">Oct 28, 2025</div>
+                  <p className="font-body-sm text-xs text-on-surface-variant mt-1 flex items-center gap-1 font-medium">
+                    <span className="material-symbols-outlined text-[16px] text-amber-600">schedule</span>
+                    Morning Slot: 08:30 AM – 11:00 AM
+                  </p>
+                </div>
+              </div>
 
-<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md mb-space-xl">
-<button className="flex-1 inline-flex items-center justify-center gap-space-sm bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg h-12 px-6 rounded-xl shadow-sm transition-all duration-200 cursor-pointer" type="button">
-<span className="material-symbols-outlined text-headline-md">add_circle</span>
-      Log Contribution
-    </button>
-<button className="flex-1 inline-flex items-center justify-center gap-space-sm bg-surface-container-lowest hover:bg-surface-container-low text-primary-container font-label-lg text-label-lg h-12 px-6 rounded-xl shadow-sm transition-all duration-200 cursor-pointer" type="button">
-<span className="material-symbols-outlined text-headline-md">hail</span>
-      Request Pickup
-    </button>
-</div>
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-label-lg text-sm text-on-surface-variant font-semibold">Society Trust Score</span>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-[20px]">verified_user</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <div className="font-display-lg text-3xl font-bold text-on-surface tracking-tight">92<span className="text-base text-gray-400 font-normal">/100</span></div>
+                    <span className="inline-flex items-center gap-1 mt-1 bg-emerald-100 text-emerald-800 font-label-sm text-xs px-2.5 py-0.5 rounded-full font-bold">
+                      Tier A Verified
+                    </span>
+                  </div>
 
-<section className="w-full flex flex-col">
-<div className="flex items-center justify-between mb-space-md">
-<div className="flex items-baseline gap-space-sm">
-<h2 className="font-headline-lg text-headline-lg text-on-surface font-bold">Events &amp; Workshops</h2>
-<span className="font-label-sm text-label-sm text-outline uppercase tracking-wider hidden sm:inline">Society Circular Calendar</span>
-</div>
-<span className="font-label-md text-label-md text-primary-container font-semibold">3 Upcoming</span>
-</div>
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                  <div className="relative w-14 h-14 shrink-0 flex items-center justify-center">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                      <path className="text-gray-200" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
+                      <path className="text-emerald-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="92, 100" strokeLinecap="round" strokeWidth="3.5"></path>
+                    </svg>
+                    <span className="absolute font-label-md text-xs text-primary font-bold">92%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-<div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col justify-between transition-all hover:shadow-md group">
-<div>
-<div className="relative h-36 w-full overflow-hidden bg-surface-container">
-<img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdrd2fIV0GjRXfNV8vhFjIvFzxUZgU7T-q_QDb6GyFAtIwxZ1xYDMW4UG1G3reeH0OHkiKGonsgZee9J1mImW01jm3fcYULVMEMs4DKGq8Jwgg9h-3zOOmK9agKFnRDP7ZIlAQv_egpwgixexrJ_UHB00fjAMdasrddlF0T5AY3hXf0aXhST4Qq5jEi-WZFXJaPYgjCp-HR6wBYJ3RYDGq4U6BsGFid3xOWp3mJS5TDb-Yc7GuxByMMA"/>
-<div className="absolute top-3 left-3">
-<span className="bg-primary-container text-on-primary font-label-sm text-label-sm px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wide">drive</span>
-</div>
-</div>
-<div className="p-space-md">
-<h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold line-clamp-1">E-Waste Clearance Drive</h3>
-<div className="mt-space-xs space-y-1">
-<p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
-<span className="material-symbols-outlined text-body-md text-primary">event</span>
-                Nov 02, 2025 • 09:00 AM
-              </p>
-<p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
-<span className="material-symbols-outlined text-body-md text-outline">location_on</span>
-                Central Clubhouse Gate
-              </p>
-</div>
-</div>
-</div>
-<div className="p-space-md pt-0 flex items-center justify-between gap-space-sm mt-space-sm">
-<span className="font-label-sm text-label-sm text-on-surface-variant font-medium flex items-center gap-1">
-<span className="material-symbols-outlined text-body-md text-primary">groups</span>
-            48 Attending
-          </span>
-<button className="bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer" type="button">
-            RSVP
-          </button>
-</div>
-</div>
+            {/* FIXED: Working Primary Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-8">
+              <button
+                type="button"
+                onClick={() => navigate('/log-contribution')}
+                className="flex-1 inline-flex items-center justify-center gap-2 bg-[#0d631b] hover:bg-[#0b4d16] text-white font-label-lg text-base h-12 px-6 rounded-xl shadow-sm hover:shadow transition-all duration-200 cursor-pointer font-semibold"
+              >
+                <span className="material-symbols-outlined text-[20px]">add_circle</span>
+                <span>Log Contribution</span>
+              </button>
 
-<div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col justify-between transition-all hover:shadow-md group">
-<div>
-<div className="relative h-36 w-full overflow-hidden bg-surface-container">
-<img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ2dyeWVMC2lsEIhUUATMqRVZeA6djtRROAA0nsf59sF4WOSV3euQz3HrWY2lRlx0ErdxSEXQf6y4U4Tq9tex2D_42OuV18E-bpqqAagon6o-ExuHktlea6_zwulO69sjX1j0qAzyyildd5pIjlLrmgEGvs5aUziDBaRMTEF8lajAq7trZZGqI4T9ROuY1wrvwiZSMzD8XLvpJ5nlYc06StvoXLzPWyVdenai0aNbHxBZmrblAymsPHQ"/>
-<div className="absolute top-3 left-3">
-<span className="bg-surface-container-highest text-primary font-label-sm text-label-sm px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wide">green_event</span>
-</div>
-</div>
-<div className="p-space-md">
-<h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold line-clamp-1">Compost Distribution Gala</h3>
-<div className="mt-space-xs space-y-1">
-<p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
-<span className="material-symbols-outlined text-body-md text-primary">event</span>
-                Nov 09, 2025 • 10:30 AM
-              </p>
-<p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
-<span className="material-symbols-outlined text-body-md text-outline">location_on</span>
-                Community Rooftop Plot
-              </p>
-</div>
-</div>
-</div>
-<div className="p-space-md pt-0 flex items-center justify-between gap-space-sm mt-space-sm">
-<span className="font-label-sm text-label-sm text-on-surface-variant font-medium flex items-center gap-1">
-<span className="material-symbols-outlined text-body-md text-primary">groups</span>
-            32 Attending
-          </span>
-<button className="bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer" type="button">
-            RSVP
-          </button>
-</div>
-</div>
+              <button
+                type="button"
+                onClick={() => navigate('/exchange')}
+                className="flex-1 inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 text-[#0d631b] font-label-lg text-base h-12 px-6 rounded-xl shadow-sm transition-all duration-200 cursor-pointer font-semibold"
+              >
+                <span className="material-symbols-outlined text-[20px]">hail</span>
+                <span>Request Pickup</span>
+              </button>
+            </div>
 
-<div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col justify-between transition-all hover:shadow-md group">
-<div>
-<div className="relative h-36 w-full overflow-hidden bg-surface-container">
-<img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDpUSCjxsKpVVznPDzrSWN-ThgtPe1yo-r013wRg4MA7pD03Ib1WhLrrHQi-MDyurIVECtsj5UN-4ndw8RqifQRVwOKKOLT4PM_pH_3oaGr07bO0ad11dw68wmGyVEZU5Q-6zqkd80VdGcSHVbESLhwh_CWZQL4-7clKNLLv1OY-u3rpbZfKUinb06UG9kqN4K-aUs1wyKnxOzPxxHuKfxz_PirR51BWaI2c0kyEv43fAKm3AppBl4Rg"/>
-<div className="absolute top-3 left-3">
-<span className="bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wide">workshop</span>
-</div>
-</div>
-<div className="p-space-md">
-<h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold line-clamp-1">Plastic Grading Masterclass</h3>
-<div className="mt-space-xs space-y-1">
-<p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
-<span className="material-symbols-outlined text-body-md text-primary">event</span>
-                Nov 15, 2025 • 04:00 PM
-              </p>
-<p className="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
-<span className="material-symbols-outlined text-body-md text-outline">location_on</span>
-                Eco Lab Room 2B
-              </p>
-</div>
-</div>
-</div>
-<div className="p-space-md pt-0 flex items-center justify-between gap-space-sm mt-space-sm">
-<span className="font-label-sm text-label-sm text-on-surface-variant font-medium flex items-center gap-1">
-<span className="material-symbols-outlined text-body-md text-primary">groups</span>
-            19 Attending
-          </span>
-<button className="bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer" type="button">
-            RSVP
-          </button>
-</div>
-</div>
+            {/* Events Section */}
+            <section className="w-full flex flex-col">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-baseline gap-2">
+                  <h2 className="font-headline-lg text-2xl text-on-surface font-bold">Events & Workshops</h2>
+                  <span className="font-label-sm text-xs text-outline uppercase tracking-wider hidden sm:inline font-semibold">Society Circular Calendar</span>
+                </div>
+                <span className="font-label-md text-xs font-bold text-primary bg-emerald-100 px-3 py-1 rounded-full">3 Upcoming</span>
+              </div>
 
-<button className="bg-surface-container-lowest/60 hover:bg-surface-container-low rounded-xl p-space-lg flex flex-col items-center justify-center text-center group cursor-pointer transition-all min-h-[260px] shadow-sm" type="button">
-<div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary-container group-hover:scale-110 transition-transform mb-space-sm">
-<span className="material-symbols-outlined text-headline-md font-bold">add</span>
-</div>
-<span className="font-headline-sm text-headline-sm text-on-surface font-semibold">Create Event</span>
-<p className="font-body-sm text-body-sm text-on-surface-variant mt-1 max-w-[180px]">
-          Schedule a collection drive or sustainability workshop
-        </p>
-<span className="mt-space-md inline-flex items-center gap-1 text-primary font-label-sm text-label-sm font-semibold">
-          Officer Portal
-          <span className="material-symbols-outlined text-body-sm">arrow_forward</span>
-</span>
-</button>
-</div>
-</section>
-</div></div></main><footer className="w-full bg-white border-t border-gray-200 mt-auto"><div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant font-body-sm text-body-sm"><p>© 2025 ReWaste Materials Ledger. All rights reserved.</p><div className="flex items-center gap-gutter"><span className="font-label-md text-label-md text-outline">Operational Circular Network</span></div></div></footer><div aria-live="polite">{notice}</div></div></div>;
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                {/* Event 1 */}
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow group">
+                  <div>
+                    <div className="relative h-36 w-full overflow-hidden bg-gray-100">
+                      <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=400&q=80" alt="Drive" />
+                      <div className="absolute top-3 left-3">
+                        <span className="bg-[#0d631b] text-white font-label-sm text-xs px-2.5 py-1 rounded-full shadow-xs uppercase tracking-wide font-bold">Drive</span>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-headline-sm text-base text-on-surface font-bold line-clamp-1">E-Waste Clearance Drive</h3>
+                      <div className="mt-2 space-y-1">
+                        <p className="font-body-sm text-xs text-on-surface-variant flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px] text-primary">event</span>
+                          Nov 02, 2025 • 09:00 AM
+                        </p>
+                        <p className="font-body-sm text-xs text-on-surface-variant flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px] text-outline">location_on</span>
+                          Central Clubhouse Gate
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4 pt-0 flex items-center justify-between gap-2 mt-2">
+                    <span className="font-label-sm text-xs text-on-surface-variant font-medium flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[16px] text-primary">groups</span>
+                      {rsvpState[1] ? '49 Attending' : '48 Attending'}
+                    </span>
+                    {/* FIXED: Working RSVP Button */}
+                    <button
+                      type="button"
+                      onClick={() => toggleRsvp(1)}
+                      className={`font-label-md text-xs px-4 py-2 rounded-xl font-bold transition-colors cursor-pointer ${
+                        rsvpState[1] ? 'bg-emerald-800 text-white' : 'bg-[#0d631b] hover:bg-[#0b4d16] text-white'
+                      }`}
+                    >
+                      {rsvpState[1] ? 'RSVPed ✓' : 'RSVP'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Event 2 */}
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow group">
+                  <div>
+                    <div className="relative h-36 w-full overflow-hidden bg-gray-100">
+                      <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&w=400&q=80" alt="Gala" />
+                      <div className="absolute top-3 left-3">
+                        <span className="bg-emerald-100 text-emerald-800 font-label-sm text-xs px-2.5 py-1 rounded-full shadow-xs uppercase tracking-wide font-bold">Green Event</span>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-headline-sm text-base text-on-surface font-bold line-clamp-1">Compost Distribution Gala</h3>
+                      <div className="mt-2 space-y-1">
+                        <p className="font-body-sm text-xs text-on-surface-variant flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px] text-primary">event</span>
+                          Nov 09, 2025 • 10:30 AM
+                        </p>
+                        <p className="font-body-sm text-xs text-on-surface-variant flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px] text-outline">location_on</span>
+                          Community Rooftop Plot
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4 pt-0 flex items-center justify-between gap-2 mt-2">
+                    <span className="font-label-sm text-xs text-on-surface-variant font-medium flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[16px] text-primary">groups</span>
+                      {rsvpState[2] ? '33 Attending' : '32 Attending'}
+                    </span>
+                    {/* FIXED: Working RSVP Button */}
+                    <button
+                      type="button"
+                      onClick={() => toggleRsvp(2)}
+                      className={`font-label-md text-xs px-4 py-2 rounded-xl font-bold transition-colors cursor-pointer ${
+                        rsvpState[2] ? 'bg-emerald-800 text-white' : 'bg-[#0d631b] hover:bg-[#0b4d16] text-white'
+                      }`}
+                    >
+                      {rsvpState[2] ? 'RSVPed ✓' : 'RSVP'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Event 3 */}
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow group">
+                  <div>
+                    <div className="relative h-36 w-full overflow-hidden bg-gray-100">
+                      <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=400&q=80" alt="Masterclass" />
+                      <div className="absolute top-3 left-3">
+                        <span className="bg-amber-100 text-amber-800 font-label-sm text-xs px-2.5 py-1 rounded-full shadow-xs uppercase tracking-wide font-bold">Workshop</span>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-headline-sm text-base text-on-surface font-bold line-clamp-1">Plastic Grading Masterclass</h3>
+                      <div className="mt-2 space-y-1">
+                        <p className="font-body-sm text-xs text-on-surface-variant flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px] text-primary">event</span>
+                          Nov 15, 2025 • 04:00 PM
+                        </p>
+                        <p className="font-body-sm text-xs text-on-surface-variant flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px] text-outline">location_on</span>
+                          Eco Lab Room 2B
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4 pt-0 flex items-center justify-between gap-2 mt-2">
+                    <span className="font-label-sm text-xs text-on-surface-variant font-medium flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[16px] text-primary">groups</span>
+                      {rsvpState[3] ? '20 Attending' : '19 Attending'}
+                    </span>
+                    {/* FIXED: Working RSVP Button */}
+                    <button
+                      type="button"
+                      onClick={() => toggleRsvp(3)}
+                      className={`font-label-md text-xs px-4 py-2 rounded-xl font-bold transition-colors cursor-pointer ${
+                        rsvpState[3] ? 'bg-emerald-800 text-white' : 'bg-[#0d631b] hover:bg-[#0b4d16] text-white'
+                      }`}
+                    >
+                      {rsvpState[3] ? 'RSVPed ✓' : 'RSVP'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* FIXED: Working Create Event Card Button */}
+                <button
+                  type="button"
+                  onClick={() => navigate('/ngo/events')}
+                  className="bg-white hover:bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300 hover:border-primary p-6 flex flex-col items-center justify-center text-center group cursor-pointer transition-all min-h-[260px] shadow-sm"
+                >
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 text-primary flex items-center justify-center group-hover:scale-110 transition-transform mb-3">
+                    <span className="material-symbols-outlined text-[24px] font-bold">add</span>
+                  </div>
+                  <span className="font-headline-sm text-base text-on-surface font-bold">Create Event</span>
+                  <p className="font-body-sm text-xs text-on-surface-variant mt-1 max-w-[180px]">
+                    Schedule a collection drive or sustainability workshop
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-primary font-label-sm text-xs font-bold">
+                    Officer Portal
+                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  </span>
+                </button>
+
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
 }

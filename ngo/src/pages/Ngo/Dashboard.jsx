@@ -1,204 +1,232 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar } from '../../components/index.jsx';
+import { Link, useNavigate } from 'react-router-dom';
+import { Navbar, Footer } from '../../components/index.jsx';
 
-export default function Dashboard(){
-  const [notice,setNotice]=useState('');
-  const handleSubmit=(event)=>{event.preventDefault();setNotice('Submitted successfully.');};
-  return <div className="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between"><div className="min-h-screen" onSubmit={handleSubmit}><header className="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div className="h-16 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-gutter"><div className="flex items-center gap-space-lg"><Link className="flex items-center gap-space-sm" to="/ngo/dashboard"><img alt="ReWaste Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W6N7O6ZgE2Tll6drrzyraadVHbqUPUs8qfNIeNKws4onwuYsxxdedp7BeTkIs0Txon3umt_QP8qOaEmZSI73-IZdcgoiddIyqPPoI3BmnPY5RLnNxVE2-Jq3nOjW7HpKVgbvuMfi79kkCrl4z176MqkLjcsk8ddgs1xFVpTIMFCOv0Zsk5iD1GqxWAiT4V7UoagrTSXG5WqIrbzsQSPHTF-dKjat2b_25Db6lusmuKF9auSZJEzc90UlGt"/><span className="font-headline-sm text-headline-sm text-primary tracking-tight">ReWaste</span></Link></div><Navbar variant="Ngo" className="hidden lg:flex items-center gap-space-xs"><Link className="px-space-md py-space-sm transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg" to="/ngo/dashboard">Dashboard</Link><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/societies">Societies</Link><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/contracts">Contracts</Link><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/collections">Collections</Link><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/events">Events</Link><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/verification">Profile</Link></Navbar><div className="flex items-center gap-space-md"><button className="relative p-space-sm rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span className="material-symbols-outlined text-[20px]">notifications</span><span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary-container"></span></button><div className="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" className="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1XIkgjCwvtpBzXxmJsFdrIqD2_RlkOCMXhqXRZs9RIuajcPmKGc5TFExGvzrsb5x4KLvrfXrUAs14IBZHmLmBRkVqeWPkdmnPZKpssyA0pzx_lGvis1EODHQd4Ywb0tOmt1X4wOWKnPWWRaqePFMdTm75Ie5fT83SQhkbX48Y7yJZadNAWONrR3ToUQ6rPuGG-T9Jt-ZfOubQRKq0fj1mpiRpa8p7yFhAP2O75hESg7pubaBMMmXdNLCnyY"/><span className="hidden sm:inline-flex items-center px-space-sm py-0.5 rounded-full bg-surface-container-high font-label-sm text-label-sm text-secondary font-semibold">NGO Partner</span></div></div></div></header><main className="w-full pt-16 bg-surface flex-1"><div className="max-w-[1440px] mx-auto px-margin py-space-lg"><div className="flex flex-col w-full relative">
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const [hideToast1, setHideToast1] = useState(false);
+  const [hideToast2, setHideToast2] = useState(false);
 
-<div className="fixed top-20 right-6 z-50 flex flex-col gap-space-sm max-w-md w-full pointer-events-none">
+  return (
+    <div className="bg-[#f8faf9] font-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between">
+      <Navbar variant="Ngo" />
 
-<div className="pointer-events-auto flex items-start gap-space-md p-space-md rounded-xl bg-surface-container-lowest shadow-xl transition-all duration-500 ease-out transform translate-y-0 opacity-100" id="toast-s08">
-<div className="p-2 rounded-lg bg-surface-container-low text-primary flex items-center justify-center shrink-0">
-<span className="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>check_circle</span>
-</div>
-<div className="flex-1 min-w-0">
-<div className="flex items-center justify-between gap-space-xs mb-0.5">
-<span className="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Live Event S08</span>
-<span className="font-body-sm text-body-sm text-outline">Just now</span>
-</div>
-<p className="font-label-md text-label-md text-on-surface">SOCKET EVENT S08: Crestview Towers accepted Compost contract (1,200 kg/mo)</p>
-</div>
-<button className="text-on-surface-variant hover:text-on-surface p-1 shrink-0 transition-colors">
-<span className="material-symbols-outlined text-[18px]">close</span>
-</button>
-</div>
+      <main className="w-full pt-16 bg-[#f8faf9] flex-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col w-full relative">
+            
+            {/* Live Socket Event Toasts */}
+            <div className="fixed top-20 right-6 z-40 flex flex-col gap-3 max-w-md w-full pointer-events-none">
+              {!hideToast1 && (
+                <div className="pointer-events-auto flex items-start gap-3 p-4 rounded-2xl bg-white shadow-xl border border-gray-100 animate-in fade-in duration-300">
+                  <div className="p-2 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-0.5">
+                      <span className="font-label-sm text-xs uppercase tracking-wider text-emerald-800 font-bold">Live Event S08</span>
+                      <span className="font-body-sm text-[11px] text-outline">Just now</span>
+                    </div>
+                    <p className="font-label-md text-xs font-semibold text-on-surface">Crestview Towers accepted Compost contract (1,200 kg/mo)</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setHideToast1(true)}
+                    className="text-gray-400 hover:text-gray-600 p-1 shrink-0 transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">close</span>
+                  </button>
+                </div>
+              )}
 
-<div className="pointer-events-auto flex items-start gap-space-md p-space-md rounded-xl bg-surface-container-lowest shadow-xl transition-all duration-500 ease-out transform translate-y-2 opacity-95" id="toast-s09">
-<div className="p-2 rounded-lg bg-error-container text-error flex items-center justify-center shrink-0">
-<span className="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>warning</span>
-</div>
-<div className="flex-1 min-w-0">
-<div className="flex items-center justify-between gap-space-xs mb-0.5">
-<span className="font-label-sm text-label-sm uppercase tracking-wider text-error font-semibold">Live Event S09</span>
-<span className="font-body-sm text-body-sm text-outline">2m ago</span>
-</div>
-<p className="font-label-md text-label-md text-on-surface">SOCKET EVENT S09: Weigh-in flag logged on batch #WB-409</p>
-</div>
-<button className="text-on-surface-variant hover:text-on-surface p-1 shrink-0 transition-colors">
-<span className="material-symbols-outlined text-[18px]">close</span>
-</button>
-</div>
-</div>
+              {!hideToast2 && (
+                <div className="pointer-events-auto flex items-start gap-3 p-4 rounded-2xl bg-white shadow-xl border border-gray-100 animate-in fade-in duration-300">
+                  <div className="p-2 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-[20px]">warning</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-0.5">
+                      <span className="font-label-sm text-xs uppercase tracking-wider text-amber-800 font-bold">Live Event S09</span>
+                      <span className="font-body-sm text-[11px] text-outline">2m ago</span>
+                    </div>
+                    <p className="font-label-md text-xs font-semibold text-on-surface">Weigh-in flag logged on batch #WB-409</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setHideToast2(true)}
+                    className="text-gray-400 hover:text-gray-600 p-1 shrink-0 transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">close</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
-<header className="flex flex-col gap-space-xs mb-space-xl">
-<div className="flex items-center gap-space-xs text-primary font-label-sm text-label-sm uppercase tracking-wider">
-<span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-      Operations Console
+            {/* Header Title */}
+            <div className="flex flex-col gap-1 mb-8">
+              <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+                Operations Console
+              </div>
+              <h1 className="font-headline-xl text-3xl font-bold text-on-surface tracking-tight">NGO Operations Dashboard</h1>
+              <p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">
+                Active material sourcing pipelines, society compliance, and scheduled collections.
+              </p>
+            </div>
+
+            {/* Stat Cards */}
+            <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <span className="font-label-lg text-sm text-on-surface-variant font-semibold">Active Contracts</span>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-[22px]">description</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="font-display-lg text-3xl font-bold text-on-surface">14 Societies</div>
+                  <p className="font-body-sm text-xs text-primary mt-1 flex items-center gap-1 font-semibold">
+                    <span className="material-symbols-outlined text-[16px]">trending_up</span>
+                    +2 contracts pending approval
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <span className="font-label-lg text-sm text-on-surface-variant font-semibold">Verified Volume This Month</span>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-[22px]">inventory_2</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="font-display-lg text-3xl font-bold text-on-surface">18,450 kg</div>
+                  <p className="font-body-sm text-xs text-primary mt-1 flex items-center gap-1 font-semibold">
+                    <span className="material-symbols-outlined text-[16px]">verified</span>
+                    94.8% average purity score
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <span className="font-label-lg text-sm text-on-surface-variant font-semibold">Grassroots Disbursements</span>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-[22px]">payments</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="font-display-lg text-3xl font-bold text-on-surface">₹ 1,42,800</div>
+                  <p className="font-body-sm text-xs text-primary mt-1 flex items-center gap-1 font-semibold">
+                    <span className="material-symbols-outlined text-[16px]">task_alt</span>
+                    100% payout settlement rate
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Quick Actions Bar */}
+            <div className="flex flex-wrap items-center gap-4 mb-8">
+              <button
+                type="button"
+                onClick={() => navigate('/ngo/contracts/new')}
+                className="inline-flex items-center gap-2 bg-[#0d631b] hover:bg-[#0b4d16] text-white font-label-lg text-sm font-bold px-6 py-3 rounded-xl shadow-sm cursor-pointer transition-all"
+              >
+                <span className="material-symbols-outlined text-[20px]">add_circle</span>
+                <span>Issue New Contract</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('/ngo/verification')}
+                className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-on-surface border border-gray-200 font-label-lg text-sm font-bold px-6 py-3 rounded-xl shadow-sm cursor-pointer transition-all"
+              >
+                <span className="material-symbols-outlined text-[20px] text-primary">verified_user</span>
+                <span>Statutory Verification</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('/ngo/events')}
+                className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-on-surface border border-gray-200 font-label-lg text-sm font-bold px-6 py-3 rounded-xl shadow-sm cursor-pointer transition-all"
+              >
+                <span className="material-symbols-outlined text-[20px] text-primary">event</span>
+                <span>Manage Events</span>
+              </button>
+            </div>
+
+            {/* Managed Societies List */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="font-headline-md text-xl font-bold text-on-surface">Contracted Recovery Hubs</h3>
+                  <p className="font-body-sm text-xs text-on-surface-variant mt-0.5">Grassroots partner societies currently under active NGO supervision</p>
+                </div>
+                <Link to="/ngo/societies" className="font-label-md text-xs font-bold text-primary hover:underline">
+                  View All Societies →
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div className="p-5 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-label-md text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">Active</span>
+                      <span className="font-body-sm text-xs text-gray-500">Tier A</span>
+                    </div>
+                    <h4 className="font-headline-sm text-base font-bold text-on-surface">Green Valley Heights</h4>
+                    <p className="font-body-sm text-xs text-on-surface-variant mt-1">420 Resident Units • Sector 54</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-gray-200 flex items-center justify-between">
+                    <span className="font-body-sm text-xs text-gray-600 font-medium">Monthly: 3,400 kg</span>
+                    <button onClick={() => navigate('/ngo/societies/1')} className="font-label-sm text-xs text-primary font-bold hover:underline cursor-pointer">
+                      Manage →
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-5 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-label-md text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">Active</span>
+                      <span className="font-body-sm text-xs text-gray-500">Tier A</span>
+                    </div>
+                    <h4 className="font-headline-sm text-base font-bold text-on-surface">Crestview Towers</h4>
+                    <p className="font-body-sm text-xs text-on-surface-variant mt-1">280 Resident Units • Sector 62</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-gray-200 flex items-center justify-between">
+                    <span className="font-body-sm text-xs text-gray-600 font-medium">Monthly: 2,100 kg</span>
+                    <button onClick={() => navigate('/ngo/societies/2')} className="font-label-sm text-xs text-primary font-bold hover:underline cursor-pointer">
+                      Manage →
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-5 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-label-md text-xs font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">Review Pending</span>
+                      <span className="font-body-sm text-xs text-gray-500">Tier B</span>
+                    </div>
+                    <h4 className="font-headline-sm text-base font-bold text-on-surface">Palm Meadows Enclave</h4>
+                    <p className="font-body-sm text-xs text-on-surface-variant mt-1">150 Resident Units • Sector 48</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-gray-200 flex items-center justify-between">
+                    <span className="font-body-sm text-xs text-gray-600 font-medium">Monthly: 1,800 kg</span>
+                    <button onClick={() => navigate('/ngo/societies/3')} className="font-label-sm text-xs text-primary font-bold hover:underline cursor-pointer">
+                      Review →
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
     </div>
-<h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight">NGO Operations Dashboard</h1>
-<p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Active material sourcing pipelines, society compliance, and scheduled collections.</p>
-</header>
-
-<section className="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-space-xl">
-
-<div className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all duration-200 hover:shadow-md">
-<div className="flex items-center justify-between gap-space-sm mb-space-md">
-<span className="font-label-lg text-label-lg text-on-surface-variant">Active Contracts</span>
-<div className="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
-<span className="material-symbols-outlined text-[22px]">description</span>
-</div>
-</div>
-<div>
-<div className="font-display-lg text-display-lg text-on-surface mb-1">12 Contracts</div>
-<p className="font-body-sm text-body-sm text-outline">Across 8 residential societies</p>
-</div>
-</div>
-
-<div className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all duration-200 hover:shadow-md">
-<div className="flex items-center justify-between gap-space-sm mb-space-md">
-<span className="font-label-lg text-label-lg text-on-surface-variant">Upcoming Month-End Pickups</span>
-<div className="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
-<span className="material-symbols-outlined text-[22px]">local_shipping</span>
-</div>
-</div>
-<div>
-<div className="font-display-lg text-display-lg text-on-surface mb-1">4 Scheduled</div>
-<p className="font-body-sm text-body-sm text-outline">Estimated 4,850 kg recyclable volume</p>
-</div>
-</div>
-
-<div className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all duration-200 hover:shadow-md">
-<div className="flex items-center justify-between gap-space-sm mb-space-md">
-<span className="font-label-lg text-label-lg text-on-surface-variant">Recent Flags</span>
-<div className="w-10 h-10 rounded-lg bg-error-container/30 flex items-center justify-center text-error">
-<span className="material-symbols-outlined text-[22px]">flag</span>
-</div>
-</div>
-<div>
-<div className="font-display-lg text-display-lg text-error mb-1">2 Flagged</div>
-<p className="font-body-sm text-body-sm text-outline">Weight variance &gt;15% detected</p>
-</div>
-</div>
-</section>
-
-<div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
-
-<section className="lg:col-span-7 flex flex-col gap-space-md">
-<div className="flex items-center justify-between px-space-xs">
-<h2 className="font-headline-md text-headline-md text-on-surface">Upcoming Pickups</h2>
-<span className="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full">3 Active Queued</span>
-</div>
-<div className="flex flex-col gap-space-md">
-
-<article className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
-<div className="flex flex-wrap items-start justify-between gap-space-sm">
-<div>
-<h3 className="font-headline-sm text-headline-sm text-on-surface">Crestview Towers</h3>
-<p className="font-body-md text-body-md text-on-surface-variant">Compost/Wet • 1,200 kg</p>
-</div>
-<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-[#E8F5E9] text-[#2E7D32]">Confirmed</span>
-</div>
-<div className="flex flex-wrap items-center justify-between gap-y-space-sm gap-x-space-lg pt-space-xs text-on-surface-variant font-body-sm text-body-sm">
-<div className="flex items-center gap-1.5">
-<span className="material-symbols-outlined text-[18px] text-outline">calendar_today</span>
-<span>Date: Oct 31, 2025</span>
-</div>
-<div className="flex items-center gap-1.5">
-<span className="material-symbols-outlined text-[18px] text-outline">person</span>
-<span>Bhangarwala: Ramesh Kumar</span>
-</div>
-</div>
-</article>
-
-<article className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
-<div className="flex flex-wrap items-start justify-between gap-space-sm">
-<div>
-<h3 className="font-headline-sm text-headline-sm text-on-surface">Green Valley Heights</h3>
-<p className="font-body-md text-body-md text-on-surface-variant">Dry Recyclables • 850 kg</p>
-</div>
-<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-on-surface-variant">Dispatch Assigned</span>
-</div>
-<div className="flex flex-wrap items-center justify-between gap-y-space-sm gap-x-space-lg pt-space-xs text-on-surface-variant font-body-sm text-body-sm">
-<div className="flex items-center gap-1.5">
-<span className="material-symbols-outlined text-[18px] text-outline">calendar_today</span>
-<span>Date: Nov 02, 2025</span>
-</div>
-</div>
-</article>
-
-<article className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
-<div className="flex flex-wrap items-start justify-between gap-space-sm">
-<div>
-<h3 className="font-headline-sm text-headline-sm text-on-surface">Palm Heights</h3>
-<p className="font-body-md text-body-md text-on-surface-variant">E-Waste &amp; Scrap • 320 kg</p>
-</div>
-<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-[#FFF8E1] text-[#835400]">Pending Confirmation</span>
-</div>
-<div className="flex flex-wrap items-center justify-between gap-y-space-sm gap-x-space-lg pt-space-xs text-on-surface-variant font-body-sm text-body-sm">
-<div className="flex items-center gap-1.5">
-<span className="material-symbols-outlined text-[18px] text-outline">calendar_today</span>
-<span>Date: Nov 05, 2025</span>
-</div>
-</div>
-</article>
-</div>
-</section>
-
-<section className="lg:col-span-5 flex flex-col gap-space-md">
-<div className="flex items-center justify-between px-space-xs">
-<h2 className="font-headline-md text-headline-md text-on-surface">Recent Flags</h2>
-<span className="font-label-sm text-label-sm text-error bg-error-container/40 px-2.5 py-1 rounded-full font-semibold">Action Required</span>
-</div>
-<div className="flex flex-col gap-space-md">
-
-<article className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-sm">
-<div className="flex items-start justify-between gap-space-sm">
-<h3 className="font-headline-sm text-headline-sm text-on-surface">Silver Oak Enclave</h3>
-<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-[#FFF8E1] text-[#835400]">Under Review</span>
-</div>
-<div className="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1">
-<div className="flex items-center gap-1.5 text-error font-label-md text-label-md">
-<span className="material-symbols-outlined text-[16px]">priority_high</span>
-<span>Flagged: Actual 32 kg vs Promised 50 kg E-waste</span>
-</div>
-<p className="font-label-sm text-label-sm text-on-surface-variant pl-5 font-semibold text-error">-36% variance</p>
-</div>
-<div className="flex items-center gap-1.5 pt-space-xs text-on-surface-variant font-body-sm text-body-sm">
-<span className="material-symbols-outlined text-[18px] text-outline">event</span>
-<span>Date: Oct 24, 2025</span>
-</div>
-</article>
-
-<article className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-sm">
-<div className="flex items-start justify-between gap-space-sm">
-<h3 className="font-headline-sm text-headline-sm text-on-surface">Lotus Residency</h3>
-<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-[#E8F5E9] text-[#2E7D32]">Resolved with Penalty</span>
-</div>
-<div className="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1">
-<div className="flex items-start gap-1.5 text-on-surface font-label-md text-label-md">
-<span className="material-symbols-outlined text-[16px] text-secondary mt-0.5">report_problem</span>
-<span>Flagged: Wet waste contamination in dry paper batch</span>
-</div>
-</div>
-<div className="flex items-center gap-1.5 pt-space-xs text-on-surface-variant font-body-sm text-body-sm">
-<span className="material-symbols-outlined text-[18px] text-outline">event</span>
-<span>Date: Oct 18, 2025</span>
-</div>
-</article>
-</div>
-</section>
-</div>
-</div></div></main><footer className="w-full bg-surface-container-lowest shadow-[0_-1px_8px_rgba(0,0,0,0.03)] py-space-lg mt-auto"><div className="max-w-[1440px] mx-auto px-margin flex flex-col sm:flex-row items-center justify-between gap-space-sm font-body-sm text-body-sm text-on-surface-variant"><p>© 2025 ReWaste Materials Ledger. All rights reserved.</p><p className="font-label-sm text-label-sm text-outline">Operational Circular Network</p></div></footer><div aria-live="polite">{notice}</div></div></div>;
+  );
 }
