@@ -2,22 +2,22 @@
  * setup.js — runs via setupFilesAfterEnv before every test file.
  *
  * Lifecycle per test file:
- *   beforeAll  → spin up MongoMemoryServer, connect Mongoose
+ *   beforeAll  → spin up an in-memory MongoDB *replica set*, connect Mongoose
  *   afterEach  → wipe every collection (test isolation)
  *   afterAll   → disconnect Mongoose, stop the memory server
  *
- * Works correctly whether Jest runs files in parallel workers
- * or sequentially (--runInBand), because each file gets its own
- * Mongoose connection to its own in-memory instance.
+ * A replica set (rather than a standalone server) is required so that
+ * multi-document transactions work (P2P select-quote, payments).
+ * Each file gets its own instance, so parallel workers never share data.
  */
 
-const { MongoMemoryServer } = require('mongodb-memory-server');
+const { MongoMemoryReplSet } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
 let mongod;
 
 beforeAll(async () => {
-  mongod = await MongoMemoryServer.create();
+  mongod = await MongoMemoryReplSet.create({ replSet: { count: 1 } });
   const uri = mongod.getUri();
 
   // Disconnect any leftover connection (relevant in --runInBand mode)
@@ -26,7 +26,10 @@ beforeAll(async () => {
   }
 
   await mongoose.connect(uri);
-}, 60000); // generous timeout — binary download on CI can be slow
+
+  // Build indexes up front so unique constraints are enforced from the first test
+  await Promise.all(Object.values(mongoose.models).map((m) => m.init()));
+}, 90000); // generous timeout — replica-set start and binary download can be slow
 
 afterEach(async () => {
   // Clear every collection so tests never bleed into each other

@@ -6,6 +6,7 @@
  * The summed weight in that window is the "promised" kg an NGO will verify.
  */
 
+const mongoose = require('mongoose');
 const { CATEGORIES } = require('../config/constants');
 const Society = require('../models/Society');
 const Collection = require('../models/Collection');
@@ -45,10 +46,36 @@ async function currentCycle(societyId) {
   return { byCategory, entries };
 }
 
+/**
+ * Contribution totals per calendar month (UTC), newest first, at most 12 months:
+ * [{ month: '2026-02', totalKg, byCategory: { plastic: 2, ... } }]
+ */
+async function monthlyHistory(societyId) {
+  const rows = await Contribution.aggregate([
+    { $match: { societyId: new mongoose.Types.ObjectId(String(societyId)) } },
+    {
+      $group: {
+        _id: { month: { $dateToString: { format: '%Y-%m', date: '$loggedAt' } }, category: '$category' },
+        kg: { $sum: '$weightKg' },
+      },
+    },
+  ]);
+
+  const months = new Map();
+  rows.forEach(({ _id, kg }) => {
+    if (!months.has(_id.month)) months.set(_id.month, { month: _id.month, totalKg: 0, byCategory: {} });
+    const entry = months.get(_id.month);
+    entry.byCategory[_id.category] = round3(kg);
+    entry.totalKg = round3(entry.totalKg + kg);
+  });
+
+  return [...months.values()].sort((a, b) => b.month.localeCompare(a.month)).slice(0, 12);
+}
+
 /** Promised kg for one category in the society's current cycle. */
 async function promisedKg(societyId, category) {
   const { byCategory } = await currentCycle(societyId);
   return byCategory.find((b) => b.category === category).totalKg;
 }
 
-module.exports = { currentCycle, promisedKg };
+module.exports = { currentCycle, promisedKg, monthlyHistory };

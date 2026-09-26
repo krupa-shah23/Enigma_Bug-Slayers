@@ -10,12 +10,11 @@ const http = require('http');
 const mongoose = require('mongoose');
 const { PORT, MONGO_URI } = require('./config/env');
 const app = require('./app');
+const { attachSockets } = require('./sockets');
 
 const server = http.createServer(app);
 
-// Socket.IO is attached in Step 9 (sockets/index.js)
-// const { attachSockets } = require('./sockets');
-// attachSockets(server);
+attachSockets(server);
 
 mongoose
   .connect(MONGO_URI)

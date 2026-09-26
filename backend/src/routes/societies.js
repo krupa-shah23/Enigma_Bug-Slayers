@@ -21,6 +21,7 @@ const { checkLocation } = require('../services/geo');
 const { nextCollectionDate, festivalSuggestion, toUtcDay } = require('../services/schedule');
 const { currentCycle } = require('../services/aggregate');
 const { loadStats, projectSociety, festivalStatus } = require('../services/societyView');
+const { emitToUser, syncRooms } = require('../sockets/emitter');
 const { User, Society, Contract, Payment } = require('../models');
 
 const router = express.Router();
@@ -122,6 +123,7 @@ router.post(
       throw new AppError(409, 'ALREADY_IN_SOCIETY', 'You already belong to a society');
     }
 
+    await syncRooms(req.user._id);
     return ok(res, { society }, 201);
   })
 );
@@ -198,6 +200,7 @@ router.post(
       throw new AppError(409, 'ALREADY_IN_SOCIETY', 'You already belong to a society');
     }
 
+    await syncRooms(req.user._id);
     const stats = await loadStats([society._id]);
     return ok(res, { society: projectSociety(society, stats, { detail: true }) });
   })
@@ -280,6 +283,7 @@ router.patch(
     const { collectionFrequency, treasurerId } = req.body;
     const set = {};
     const unset = {};
+    const roleChanged = []; // users whose societyRole changes: their live sockets need new rooms
 
     if (treasurerId !== undefined) {
       if (req.user.societyRole !== 'cp') {
@@ -298,11 +302,13 @@ router.patch(
         }
         await User.updateOne({ _id: appointee._id }, { societyRole: 'treasurer' });
         set.treasurerId = appointee._id;
+        roleChanged.push(appointee._id);
       }
 
       // The previous treasurer (if a different person) goes back to being a resident
       if (society.treasurerId && !society.treasurerId.equals(treasurerId)) {
         await User.updateOne({ _id: society.treasurerId }, { societyRole: 'resident' });
+        roleChanged.push(society.treasurerId);
       }
     }
 
@@ -317,6 +323,7 @@ router.patch(
     if (Object.keys(unset).length) update.$unset = unset;
     const updated = await Society.findByIdAndUpdate(society._id, update, { new: true });
 
+    await Promise.all(roleChanged.map(syncRooms));
     return ok(res, { society: updated });
   })
 );
@@ -400,7 +407,11 @@ router.post(
       throw new AppError(409, 'CONTRACT_NOT_EDITABLE', 'Only an offered contract can be accepted');
     }
 
-    // TODO(step 9/13): emit S08 contract:accepted to user:<ngoId> once the socket emitter exists.
+    // S08 — tell the NGO its contract was accepted
+    emitToUser(contract.ngoId, 'contract:accepted', {
+      contractId: contract.id,
+      societyId: contract.societyId.toString(),
+    });
     return ok(res, { contract });
   })
 );
