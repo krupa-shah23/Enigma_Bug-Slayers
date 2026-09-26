@@ -9,6 +9,7 @@
  */
 
 const express = require('express');
+const env = require('./config/env');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -22,10 +23,18 @@ app.get('/health', (_req, res) => {
   res.json({ success: true, data: { status: 'ok' } });
 });
 
+// ── Uploaded files, served statically ─────────────────────────────────────────
+app.use(
+  '/uploads',
+  express.static(env.UPLOAD_DIR, {
+    setHeaders: (res) => res.setHeader('X-Content-Type-Options', 'nosniff'),
+  })
+);
+
 // ── API routes (mounted per step) ─────────────────────────────────────────────
-// Step 5:  app.use('/api/auth',        require('./routes/auth'));
-// Step 6:  app.use('/api/uploads',     require('./routes/uploads'));
-// Step 6:  app.use('/api/config',      require('./routes/config'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/uploads', require('./routes/uploads'));
+app.use('/api/config', require('./routes/config'));
 // Step 7:  app.use('/api/societies',   require('./routes/societies'));
 // Step 8:  app.use('/api/contributions', require('./routes/contributions'));
 // Step 10: app.use('/api/p2p',         require('./routes/p2p'));

@@ -18,12 +18,12 @@ module.exports = {
 
   coverageDirectory: 'coverage',
 
-  // Thresholds are unlocked from Step 16 onward (commented out until then)
-  // coverageThreshold: {
-  //   global:              { lines: 85, branches: 75 },
-  //   './src/services/':   { lines: 100, branches: 100 },
-  //   './src/middleware/': { lines: 90 },
-  // },
+  // Step 3: services must be fully covered. The rest is unlocked from Step 16.
+  coverageThreshold: {
+    './src/services/': { lines: 100, branches: 100 },
+    // global:              { lines: 85, branches: 75 },
+    // './src/middleware/': { lines: 90 },
+  },
 
   // Give mongodb-memory-server enough time to start
   testTimeout: 30000,

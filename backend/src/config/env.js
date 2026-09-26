@@ -4,6 +4,7 @@
  */
 
 require('dotenv').config();
+const path = require('path');
 const Joi = require('joi');
 
 const schema = Joi.object({
@@ -19,6 +20,7 @@ const schema = Joi.object({
   DEMO_MODE: Joi.boolean().truthy('true').falsy('false').default(false),
   PAYMENT_MODE: Joi.string().valid('simulated', 'razorpay_test').default('simulated'),
   CORS_ORIGINS: Joi.string().allow('').default(''),
+  UPLOAD_DIR: Joi.string().default(path.resolve(__dirname, '../../uploads')),
 }).unknown(true);
 
 function loadEnv(source = process.env) {
@@ -37,6 +39,7 @@ function loadEnv(source = process.env) {
     CORS_ORIGINS: value.CORS_ORIGINS
       ? value.CORS_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean)
       : [],
+    UPLOAD_DIR: path.resolve(value.UPLOAD_DIR),
   };
 }
 
