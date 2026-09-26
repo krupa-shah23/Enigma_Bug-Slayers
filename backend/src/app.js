@@ -9,6 +9,7 @@
  */
 
 const express = require('express');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -34,5 +35,8 @@ app.get('/health', (_req, res) => {
 // Step 14: app.use('/api/payments',    require('./routes/payments'));
 // Step 15: app.use('/api/events',      require('./routes/events'));
 // Step 16: app.use('/api/person',      require('./routes/person'));
+
+// ── Central error handler (must stay last) ────────────────────────────────────
+app.use(errorHandler);
 
 module.exports = app;

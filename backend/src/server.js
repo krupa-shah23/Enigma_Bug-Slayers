@@ -6,14 +6,10 @@
  * tests import app.js directly.
  */
 
-require('dotenv').config();
-
 const http = require('http');
 const mongoose = require('mongoose');
+const { PORT, MONGO_URI } = require('./config/env');
 const app = require('./app');
-
-const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/waste-exchange';
 
 const server = http.createServer(app);
 
