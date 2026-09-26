@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function Login(){
   const [notice,setNotice]=useState('');
+  const [isSignup,setIsSignup]=useState(true);
   const handleSubmit=(event)=>{event.preventDefault();setNotice('Submitted successfully.');};
   return <div className="bg-surface font-body-md text-on-surface antialiased min-h-screen flex items-center justify-center"><div className="min-h-screen" onSubmit={handleSubmit}><main className="w-full min-h-screen flex items-center justify-center bg-surface"><div className="flex flex-col w-full">
 <div className="w-full max-w-7xl mx-auto my-auto p-4 sm:p-6 lg:p-8">
@@ -69,16 +70,16 @@ export default function Login(){
 
 <div className="flex flex-col gap-1 mb-6">
 <h2 className="font-headline-lg text-headline-lg text-on-surface" id="authHeading">
-              Register NGO Organization
+              {isSignup ? 'Register NGO Organization' : 'Log in to your NGO workspace'}
             </h2>
 <p className="font-body-md text-body-md text-on-surface-variant" id="authSubheading">
-              Establish institutional governance for local circular supply streams.
+              {isSignup ? 'Establish institutional governance for local circular supply streams.' : 'Access contracts, collection verification, payments, and events.'}
             </p>
 </div>
 
 <form className="flex flex-col gap-4" id="authForm">
 
-<div className="flex flex-col gap-4" id="signupFields">
+<div className={`flex flex-col gap-4 ${isSignup?'':'hidden'}`} id="signupFields">
 <div className="flex flex-col gap-1.5">
 <label className="font-label-md text-label-md text-on-surface" htmlFor="orgName">Organization Name</label>
 <div className="relative flex items-center">
@@ -103,7 +104,7 @@ export default function Login(){
 </div>
 </div>
 
-<div className="flex flex-col gap-1.5" id="phoneField">
+<div className={`flex flex-col gap-1.5 ${isSignup?'':'hidden'}`} id="phoneField">
 <label className="font-label-md text-label-md text-on-surface" htmlFor="phoneNum">Phone Number</label>
 <div className="relative flex items-center">
 <span className="material-symbols-outlined absolute left-3 text-outline text-headline-sm">call</span>
@@ -111,7 +112,7 @@ export default function Login(){
 </div>
 </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-4" id="passwordGrid">
+<div className={`grid grid-cols-1 gap-4 ${isSignup?'sm:grid-cols-2':''}`} id="passwordGrid">
 <div className="flex flex-col gap-1.5 col-span-1" id="mainPasswordContainer">
 <label className="font-label-md text-label-md text-on-surface" htmlFor="authPassword">Create Password</label>
 <div className="relative flex items-center">
@@ -119,7 +120,7 @@ export default function Login(){
 <input className="w-full bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg pl-10 pr-4 py-2.5 outline-none focus:bg-surface-container-lowest focus:shadow-md transition-all placeholder:text-outline" id="authPassword" placeholder="••••••••" type="password"/>
 </div>
 </div>
-<div className="flex flex-col gap-1.5 col-span-1" id="confirmPasswordContainer">
+<div className={`flex flex-col gap-1.5 col-span-1 ${isSignup?'':'hidden'}`} id="confirmPasswordContainer">
 <label className="font-label-md text-label-md text-on-surface" htmlFor="confirmPassword">Confirm Password</label>
 <div className="relative flex items-center">
 <span className="material-symbols-outlined absolute left-3 text-outline text-headline-sm">lock_reset</span>
@@ -129,14 +130,14 @@ export default function Login(){
 </div>
 
 <button className="mt-4 w-full h-11 bg-primary text-on-primary font-label-lg text-label-lg rounded-lg shadow-sm hover:bg-primary-container active:scale-[0.99] transition-all flex items-center justify-center gap-2" id="submitBtn" type="submit">
-<span>Create NGO Partner Account</span>
+<span>{isSignup ? 'Create NGO Partner Account' : 'Log In to NGO Workspace'}</span>
 <span className="material-symbols-outlined text-headline-sm">arrow_forward</span>
 </button>
 </form>
 
 <div className="mt-6 flex justify-center text-center">
-<button className="font-label-md text-label-md text-primary hover:underline" id="toggleAuthMode" type="button">
-              Already have an account? Log in
+<button className="font-label-md text-label-md text-primary hover:underline" id="toggleAuthMode" type="button" onClick={()=>setIsSignup(value=>!value)}>
+              {isSignup ? 'Already have an account? Log in' : 'New here? Create an NGO account'}
             </button>
 </div>
 

@@ -4,6 +4,10 @@ import { Navbar } from '../../components/index.jsx';
 
 export default function ActiveJob(){
   const [notice,setNotice]=useState('');
+  const [jobStep,setJobStep]=useState(0);
+  const stepLabels=['Confirm Arrival at Resident Gate','Confirm Pickup','Complete Pickup','Job Completed'];
+  const statusLabels=['En Route to Gate','Arrived at Gate','Materials Picked Up','Completed'];
+  const advanceJob=()=>{if(jobStep>=3)return;const next=jobStep+1;setJobStep(next);setNotice(next===3?'Pickup completed. Earnings have been added to history.':`Job status updated: ${statusLabels[next]}.`);};
   const handleSubmit=(event)=>{event.preventDefault();setNotice('Submitted successfully.');};
   return <div className="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between"><div className="min-h-screen" onSubmit={handleSubmit}><header className="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest border-b border-outline-variant"><div className="h-16 max-w-7xl mx-auto px-gutter flex items-center justify-between gap-space-md"><div className="flex items-center gap-space-sm shrink-0"><img alt="Clean minimalist geometric logo for ReWaste featuring a modern circular loop recycling leaf icon with bold typography 'ReWaste' in emerald forest green #2E7D32, vector style, flat design, white background. Design context: - Primary color: #2e7d32 - Font: epilogue - Mode: light - Roundness: rounded-md . The logo should be visually consistent with these brand tokens." className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W6N7O6ZgE2Tll6drrzyraadVHbqUPUs8qfNIeNKws4onwuYsxxdedp7BeTkIs0Txon3umt_QP8qOaEmZSI73-IZdcgoiddIyqPPoI3BmnPY5RLnNxVE2-Jq3nOjW7HpKVgbvuMfi79kkCrl4z176MqkLjcsk8ddgs1xFVpTIMFCOv0Zsk5iD1GqxWAiT4V7UoagrTSXG5WqIrbzsQSPHTF-dKjat2b_25Db6lusmuKF9auSZJEzc90UlGt" /><span className="font-headline-sm text-headline-sm text-primary tracking-tight">ReWaste</span></div><Navbar variant="Bhangarwala" className="hidden md:flex items-center gap-space-sm"><Link className="px-space-md py-space-xs rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" to="/bhangarwala/requests">Requests</Link><Link className="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-lg transition-colors bg-primary-container text-on-primary font-label-lg" to="/bhangarwala/active-job">Active Job<span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container">LIVE</span></Link><Link className="px-space-md py-space-xs rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" to="/bhangarwala/history">History</Link><Link className="px-space-md py-space-xs rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" to="/bhangarwala/profile">Profile</Link></Navbar><div className="flex items-center gap-space-md shrink-0"><button aria-label="Notifications" className="relative p-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span className="material-symbols-outlined text-[22px]">notifications</span><span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-secondary-container"></span></button><span className="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm bg-surface-container-high text-on-surface-variant font-semibold">Bhangarwala</span><img alt="Profile" className="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant" src="https://lh3.googleusercontent.com/aida/AEtjO1XIkgjCwvtpBzXxmJsFdrIqD2_RlkOCMXhqXRZs9RIuajcPmKGc5TFExGvzrsb5x4KLvrfXrUAs14IBZHmLmBRkVqeWPkdmnPZKpssyA0pzx_lGvis1EODHQd4Ywb0tOmt1X4wOWKnPWWRaqePFMdTm75Ie5fT83SQhkbX48Y7yJZadNAWONrR3ToUQ6rPuGG-T9Jt-ZfOubQRKq0fj1mpiRpa8p7yFhAP2O75hESg7pubaBMMmXdNLCnyY" /></div></div></header><main className="w-full pt-16 flex-1 bg-surface"><div className="flex flex-col w-full">
 <div className="max-w-7xl mx-auto w-full px-gutter py-space-lg flex flex-col gap-space-lg">
@@ -16,13 +20,13 @@ export default function ActiveJob(){
 </h1>
 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm bg-secondary-fixed text-on-secondary-fixed-variant uppercase tracking-wider font-semibold">
 <span className="w-2 h-2 rounded-full bg-secondary-container animate-ping"></span>
-            En Route to Gate
+            {statusLabels[jobStep]}
           </span>
 </div>
 <div className="shrink-0">
-<button className="w-full sm:w-auto inline-flex items-center justify-center gap-space-xs px-space-lg py-2.5 bg-primary text-on-primary rounded-lg font-label-lg text-label-lg shadow-sm hover:bg-tertiary transition-all duration-200" id="stepActionBtn" type="button">
+<button className="w-full sm:w-auto inline-flex items-center justify-center gap-space-xs px-space-lg py-2.5 bg-primary text-on-primary rounded-lg font-label-lg text-label-lg shadow-sm hover:bg-tertiary transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60" id="stepActionBtn" type="button" onClick={advanceJob} disabled={jobStep===3}>
 <span className="material-symbols-outlined text-[20px]">where_to_vote</span>
-<span id="actionBtnText" className="">Confirm Arrival at Resident Gate</span>
+<span id="actionBtnText" className="">{stepLabels[jobStep]}</span>
 </button>
 </div>
 </div>
@@ -31,7 +35,7 @@ export default function ActiveJob(){
 <div className="grid grid-cols-4 gap-2 relative">
 
 <div className="absolute top-1/2 left-[12%] right-[12%] -translate-y-1/2 h-0.5 bg-surface-container-highest -z-0">
-<div className="h-full bg-primary transition-all duration-500 w-[33%]" id="stepperProgressBar"></div>
+<div className="h-full bg-primary transition-all duration-500" id="stepperProgressBar" style={{width:`${Math.min(100,33+(jobStep*33))}%`}}></div>
 </div>
 
 <div className="relative z-10 flex flex-col items-center group cursor-pointer">
