@@ -1,0 +1,33 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.3
+2 info using node@v22.19.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:D:\Downloads\ngo\.npmrc
+5 silly config load:file:C:\Users\Sakshi\.npmrc
+6 silly config load:file:C:\Users\Sakshi\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--no-audit" "--no-fund" "--fetch-retries" "0" "--fetch-timeout" "20000"
+9 verbose logfile logs-max:10 dir:D:\Downloads\ngo\.npm-cache\_logs\2026-09-26T09_36_55_717Z-
+10 verbose logfile D:\Downloads\ngo\.npm-cache\_logs\2026-09-26T09_36_55_717Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+13 silly idealTree buildDeps
+14 silly fetch manifest react@^18.3.1
+15 silly packumentCache full:https://registry.npmjs.org/react cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/npm 1202ms
+17 http fetch GET 200 https://registry.npmjs.org/react 3041ms (cache miss)
+18 silly packumentCache full:https://registry.npmjs.org/react set size:undefined disposed:false
+19 silly fetch manifest react-dom@^18.3.1
+20 silly packumentCache full:https://registry.npmjs.org/react-dom cache-miss
+21 http fetch GET 200 https://registry.npmjs.org/react-dom 3421ms (cache miss)
+22 silly packumentCache full:https://registry.npmjs.org/react-dom set size:undefined disposed:false
+23 silly fetch manifest react-router-dom@^6.28.0
+24 silly packumentCache full:https://registry.npmjs.org/react-router-dom cache-miss
+25 http fetch GET 200 https://registry.npmjs.org/react-router-dom 999ms (cache miss)
+26 silly packumentCache full:https://registry.npmjs.org/react-router-dom set size:undefined disposed:false
+27 silly fetch manifest @vitejs/plugin-react@^4.3.4
+28 silly packumentCache full:https://registry.npmjs.org/@vitejs%2fplugin-react cache-miss
+29 http fetch GET 200 https://registry.npmjs.org/@vitejs%2fplugin-react 195ms (cache miss)
+30 silly packumentCache full:https://registry.npmjs.org/@vitejs%2fplugin-react set size:undefined disposed:false
+31 silly fetch manifest vite@^5.4.11
+32 silly packumentCache full:https://registry.npmjs.org/vite cache-miss
