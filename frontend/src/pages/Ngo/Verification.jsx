@@ -1,130 +1,67 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar } from '../../components/index.jsx';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '../../state/AppState.jsx';
+import { Avatar, Badge, Field, Icon, Modal, StatusBadge } from '../../components/ui.jsx';
 
-export default function Verification(){
-  const [notice,setNotice]=useState('');
-  const handleSubmit=(event)=>{event.preventDefault();setNotice('Submitted successfully.');};
-  return <div className="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between"><div className="min-h-screen" onSubmit={handleSubmit}><header className="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div className="h-16 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-gutter"><div className="flex items-center gap-space-lg"><Link className="flex items-center gap-space-sm" to="/ngo/dashboard"><img alt="ReWaste Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1W6N7O6ZgE2Tll6drrzyraadVHbqUPUs8qfNIeNKws4onwuYsxxdedp7BeTkIs0Txon3umt_QP8qOaEmZSI73-IZdcgoiddIyqPPoI3BmnPY5RLnNxVE2-Jq3nOjW7HpKVgbvuMfi79kkCrl4z176MqkLjcsk8ddgs1xFVpTIMFCOv0Zsk5iD1GqxWAiT4V7UoagrTSXG5WqIrbzsQSPHTF-dKjat2b_25Db6lusmuKF9auSZJEzc90UlGt"/><span className="font-headline-sm text-headline-sm text-primary tracking-tight">ReWaste</span></Link></div><Navbar variant="Ngo" className="hidden lg:flex items-center gap-space-xs"><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/dashboard">Dashboard</Link><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/societies">Societies</Link><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/contracts">Contracts</Link><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/collections">Collections</Link><Link className="px-space-md py-space-sm rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface hover:bg-surface-container transition-colors" to="/ngo/events">Events</Link><Link className="px-space-md py-space-sm transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg" to="/ngo/verification">Profile</Link></Navbar><div className="flex items-center gap-space-md"><button className="relative p-space-sm rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span className="material-symbols-outlined text-[20px]">notifications</span><span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary-container"></span></button><div className="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" className="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1XIkgjCwvtpBzXxmJsFdrIqD2_RlkOCMXhqXRZs9RIuajcPmKGc5TFExGvzrsb5x4KLvrfXrUAs14IBZHmLmBRkVqeWPkdmnPZKpssyA0pzx_lGvis1EODHQd4Ywb0tOmt1X4wOWKnPWWRaqePFMdTm75Ie5fT83SQhkbX48Y7yJZadNAWONrR3ToUQ6rPuGG-T9Jt-ZfOubQRKq0fj1mpiRpa8p7yFhAP2O75hESg7pubaBMMmXdNLCnyY"/><span className="hidden sm:inline-flex items-center px-space-sm py-0.5 rounded-full bg-surface-container-high font-label-sm text-label-sm text-secondary font-semibold">NGO Partner</span></div></div></div></header><main className="w-full pt-16 bg-surface flex-1"><div className="max-w-[1440px] mx-auto px-margin py-space-lg"><div className="flex flex-col w-full">
-<div className="max-w-[1080px] w-full mx-auto space-y-space-xl">
+export default function Verification() {
+  const { state, actions } = useApp();
+  const navigate = useNavigate();
+  const user = state.users.Ngo;
+  const v = state.verification;
+  const [org, setOrg] = useState(user.org);
+  const [phone, setPhone] = useState(user.phone);
+  const [avatar, setAvatar] = useState(user.avatar);
+  const [preview, setPreview] = useState(false);
+  const pickDoc = (e) => { const f = e.target.files?.[0]; if (f) actions.setVerificationDoc(f.name, `${(f.size / 1048576).toFixed(1)} MB`); e.target.value = ''; };
+  const pickAvatar = (e) => { const f = e.target.files?.[0]; if (f) setAvatar(URL.createObjectURL(f)); };
+  const saveProfile = () => { actions.updateProfile('Ngo', { org, phone, avatar }); actions.toast('NGO profile saved.'); };
+  const logout = () => { navigate('/'); actions.logout(); };
 
-<div className="space-y-space-xs">
-<div className="flex items-center gap-space-sm text-primary">
-<span className="material-symbols-outlined text-[20px]">verified_user</span>
-<span className="font-label-md text-label-md uppercase tracking-wider text-primary">Compliance Clearance Node</span>
-</div>
-<h1 className="font-display-lg text-display-lg text-on-surface tracking-tight">NGO Profile &amp; Institutional Verification</h1>
-<p className="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Submit statutory compliance documents for zero-landfill procurement authority.</p>
-</div>
+  return (
+    <main className="page-narrow stack">
+      <div className="flex flex-col justify-between gap-space-md sm:flex-row sm:items-end">
+        <div><p className="eyebrow mb-space-xs flex items-center gap-space-sm"><Icon name="verified_user" size={14} />Compliance Clearance Node</p><h1 className="h-title">NGO Profile &amp; Institutional Verification</h1><p className="muted mt-space-xs">Submit statutory compliance documents for zero-landfill procurement authority.</p></div>
+      </div>
 
-<div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+      <section className="card stack !gap-space-md">
+        <div className="flex items-start justify-between gap-space-md"><div><h2 className="h-section">Organization Statutory Verification</h2><p className="muted">Zero-landfill regulatory documentation &amp; credentialing</p></div><StatusBadge status={v.status} /></div>
+        <Field label="Organization Name"><div className="relative"><Icon name="apartment" size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-outline" /><input className="input pl-10" value={org} onChange={(e) => setOrg(e.target.value)} placeholder="Enter legal entity name" /></div></Field>
+        <div className="field">
+          <span className="label">Institutional Registration / 80G / 12A Certificate</span>
+          {v.docName ? (
+            <div className="flex items-center gap-space-md rounded-lg border border-outline-variant/50 p-space-md">
+              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-error-container text-error"><Icon name="picture_as_pdf" size={24} /></span>
+              <div className="min-w-0 flex-1"><p className="truncate font-label-lg text-label-lg">{v.docName}</p><p className="text-body-sm text-on-surface-variant">{v.docSize} • Signed 80G / 12A</p></div>
+              <button type="button" aria-label="View document" className="btn-ghost btn-sm !px-1.5" onClick={() => setPreview(true)}><Icon name="visibility" size={20} /></button>
+              <button type="button" aria-label="Remove document" className="btn-ghost btn-sm !px-1.5" disabled={v.status === 'Verified'} onClick={() => actions.setVerificationDoc('', '')}><Icon name="close" size={20} /></button>
+            </div>
+          ) : (
+            <label className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border-2 border-dashed border-outline-variant bg-surface-container-low/50 px-space-md py-space-lg text-center hover:bg-surface-container-low">
+              <Icon name="upload_file" size={28} className="text-primary-container" /><span className="font-label-lg text-label-lg">Drag &amp; drop NGO Registration / Tax Exemption PDF or <span className="text-primary underline">Browse files</span></span><span className="text-body-sm text-on-surface-variant">Max 10MB • PDF with stamp certification</span>
+              <input type="file" accept="application/pdf,image/*" className="sr-only" onChange={pickDoc} />
+            </label>
+          )}
+        </div>
+        {v.status === 'Verified' && <p className="flex items-center gap-1.5 rounded-lg bg-primary-fixed/30 p-space-md text-body-md text-primary"><Icon name="verified" size={20} fill />Verified by {v.reviewer}. Zero-landfill procurement authority granted.</p>}
+        <div className="flex flex-col gap-space-sm border-t border-outline-variant/40 pt-space-lg sm:flex-row sm:justify-end">
+          <button type="button" className="btn-secondary" disabled={v.status !== 'Under Review'} onClick={actions.approveVerification}><Icon name="verified" size={18} />Simulate Approval</button>
+          <button type="button" className="btn-primary" disabled={!v.docName || v.status !== 'Pending'} onClick={actions.submitVerification}><Icon name="send" size={18} />Submit Verification Documents</button>
+        </div>
+      </section>
 
-<section className="lg:col-span-7 bg-surface-container-lowest p-space-lg rounded-xl shadow-md space-y-space-lg">
-<div className="flex flex-wrap items-center justify-between gap-space-sm">
-<div>
-<h2 className="font-headline-md text-headline-md text-on-surface">Organization Statutory Verification</h2>
-<p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Zero-landfill regulatory documentation &amp; credentialing</p>
-</div>
+      <section className="card stack !gap-space-md">
+        <div><h2 className="h-section">NGO Lead Profile</h2><p className="muted">Primary account authority &amp; communication channel</p></div>
+        <div className="flex items-center gap-space-md"><Avatar name={user.org} src={avatar} size={72} /><div><label className="btn-secondary cursor-pointer"><Icon name="photo_camera" size={18} />Change Logo / Avatar<input type="file" accept="image/*" className="sr-only" onChange={pickAvatar} /></label><p className="mt-1 flex items-center gap-1 text-body-sm text-on-surface-variant"><Icon name="shield" size={14} />{user.name} • {user.email}</p></div></div>
+        <Field label="Registered Contact Phone"><div className="relative"><Icon name="call" size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-outline" /><input className="input pl-10" value={phone} onChange={(e) => setPhone(e.target.value)} /></div></Field>
+        <div className="flex flex-col-reverse justify-between gap-space-sm border-t border-outline-variant/40 pt-space-lg sm:flex-row">
+          <button type="button" className="btn-danger" onClick={logout}><Icon name="logout" size={18} />Logout</button>
+          <button type="button" className="btn-primary" onClick={saveProfile}><Icon name="check" size={18} />Save Changes</button>
+        </div>
+      </section>
 
-<div className="inline-flex items-center gap-1.5 px-space-md py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm transition-all duration-300" id="verification-status">
-<span className="w-2 h-2 rounded-full bg-secondary"></span>
-<span id="status-text">Pending</span>
-</div>
-</div>
-<div className="space-y-space-md">
-
-<div className="space-y-space-xs">
-<label className="block font-label-lg text-label-lg text-on-surface" htmlFor="org-name">Organization Name</label>
-<div className="relative">
-<input className="w-full h-11 px-space-md rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest shadow-sm transition-colors" id="org-name" placeholder="Enter legal entity name" type="text" value="EcoAction India Foundation"/>
-<span className="material-symbols-outlined absolute right-space-md top-3 text-[18px] text-outline">apartment</span>
-</div>
-</div>
-
-<div className="space-y-space-xs">
-<label className="block font-label-lg text-label-lg text-on-surface">Institutional Registration / 80G / 12A Certificate</label>
-<div className="p-space-lg rounded-xl bg-surface-container-low text-center cursor-pointer hover:bg-surface-container transition-colors flex flex-col items-center justify-center space-y-space-sm group" id="dropzone">
-<div className="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
-<span className="material-symbols-outlined text-[28px]">upload_file</span>
-</div>
-<div className="space-y-1">
-<p className="font-label-lg text-label-lg text-on-surface">Drag &amp; drop NGO Registration / Tax Exemption PDF or Browse files (Max 10MB)</p>
-<p className="font-body-sm text-body-sm text-outline">Supported format: Encrypted or standard PDF with stamp certification</p>
-</div>
-</div>
-
-<div className="mt-space-sm p-space-md rounded-lg bg-surface-container flex items-center justify-between shadow-sm">
-<div className="flex items-center gap-space-sm min-w-0">
-<div className="w-9 h-9 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
-<span className="material-symbols-outlined text-[20px]">picture_as_pdf</span>
-</div>
-<div className="min-w-0">
-<p className="font-label-md text-label-md text-on-surface truncate">ecoaction_registration_cert_2024.pdf</p>
-<p className="font-body-sm text-body-sm text-outline-variant font-medium">2.4 MB • Signed 80G / 12A Verified</p>
-</div>
-</div>
-<div className="flex items-center gap-space-xs shrink-0">
-<button className="p-space-xs text-outline hover:text-primary transition-colors" title="View PDF" type="button">
-<span className="material-symbols-outlined text-[20px]">visibility</span>
-</button>
-<button className="p-space-xs text-outline hover:text-error transition-colors" title="Remove PDF" type="button">
-<span className="material-symbols-outlined text-[20px]">close</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-
-<div className="pt-space-sm flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md">
-<button className="flex-1 h-11 px-space-lg rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-tertiary-container shadow-sm flex items-center justify-center gap-space-sm transition-all" type="button">
-<span className="material-symbols-outlined text-[20px]">send</span>
-<span>Submit Verification Documents</span>
-</button>
-<button className="h-11 px-space-md rounded-lg bg-secondary-fixed text-on-secondary-fixed font-label-lg text-label-lg hover:bg-secondary-fixed-dim transition-colors flex items-center justify-center gap-space-xs" id="simulate-approval-btn" type="button">
-<span className="material-symbols-outlined text-[18px]">verified</span>
-<span>Simulate Approval</span>
-</button>
-</div>
-</section>
-
-<section className="lg:col-span-5 bg-surface-container-lowest p-space-lg rounded-xl shadow-md space-y-space-lg">
-<div>
-<h2 className="font-headline-md text-headline-md text-on-surface">NGO Lead Profile</h2>
-<p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Primary account authority &amp; communication channel</p>
-</div>
-
-<div className="flex flex-col items-center justify-center p-space-lg rounded-xl bg-surface-container-low text-center space-y-space-md">
-<div className="relative group">
-<div className="w-28 h-28 rounded-full overflow-hidden shadow-md">
-<img alt="NGO Profile Avatar" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1XIkgjCwvtpBzXxmJsFdrIqD2_RlkOCMXhqXRZs9RIuajcPmKGc5TFExGvzrsb5x4KLvrfXrUAs14IBZHmLmBRkVqeWPkdmnPZKpssyA0pzx_lGvis1EODHQd4Ywb0tOmt1X4wOWKnPWWRaqePFMdTm75Ie5fT83SQhkbX48Y7yJZadNAWONrR3ToUQ6rPuGG-T9Jt-ZfOubQRKq0fj1mpiRpa8p7yFhAP2O75hESg7pubaBMMmXdNLCnyY"/>
-</div>
-<div className="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center shadow">
-<span className="material-symbols-outlined text-[14px]">shield</span>
-</div>
-</div>
-<button className="h-9 px-space-md rounded-lg bg-surface-container-highest text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors flex items-center gap-space-xs" type="button">
-<span className="material-symbols-outlined text-[16px]">photo_camera</span>
-<span>Change Logo / Avatar</span>
-</button>
-</div>
-
-<div className="space-y-space-xs">
-<label className="block font-label-lg text-label-lg text-on-surface" htmlFor="lead-phone">Registered Contact Phone</label>
-<div className="relative">
-<input className="w-full h-11 px-space-md rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest shadow-sm transition-colors" id="lead-phone" placeholder="+91 XXXXX XXXXX" type="text" value="+91 98112 04821"/>
-<span className="material-symbols-outlined absolute right-space-md top-3 text-[18px] text-outline">call</span>
-</div>
-</div>
-
-<div className="pt-space-md">
-<button className="w-full h-11 px-space-lg rounded-lg bg-surface-container-low text-error hover:bg-error-container hover:text-on-error-container font-label-lg text-label-lg transition-colors flex items-center justify-center gap-space-sm" type="button">
-<span className="material-symbols-outlined text-[20px]">logout</span>
-<span>Logout</span>
-</button>
-</div>
-</section>
-</div>
-</div>
-</div>
-</div></main><footer className="w-full bg-surface-container-lowest shadow-[0_-1px_8px_rgba(0,0,0,0.03)] py-space-lg mt-auto"><div className="max-w-[1440px] mx-auto px-margin flex flex-col sm:flex-row items-center justify-between gap-space-sm font-body-sm text-body-sm text-on-surface-variant"><p>© 2025 ReWaste Materials Ledger. All rights reserved.</p><p className="font-label-sm text-label-sm text-outline">Operational Circular Network</p></div></footer><div aria-live="polite">{notice}</div></div></div>;
+      <Modal open={preview} onClose={() => setPreview(false)} icon="picture_as_pdf" title={v.docName} subtitle={`${v.docSize} • Statutory certificate`} footer={<button type="button" className="btn-primary" onClick={() => setPreview(false)}>Close</button>}>
+        <div className="rounded-lg border border-outline-variant/50 bg-surface-container-low/50 p-space-lg text-center"><Icon name="workspace_premium" size={48} className="text-primary-container" /><p className="h-card mt-space-sm">Certificate of Registration • 80G / 12A</p><p className="muted">{org}</p><Badge tone="success" className="mt-space-sm" icon="verified">Signature verified</Badge></div>
+      </Modal>
+    </main>
+  );
 }

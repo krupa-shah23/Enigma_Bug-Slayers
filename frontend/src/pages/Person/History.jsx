@@ -1,317 +1,44 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar } from '../../components/index.jsx';
+import { useApp } from '../../state/AppState.jsx';
+import { Badge, EmptyState, Icon, PageHeader, Pills, SplitModal, StatusBadge } from '../../components/ui.jsx';
+import { inr } from '../../lib/format.js';
 
-export default function History(){
-  const [notice,setNotice]=useState('');
-  const handleSubmit=(event)=>{event.preventDefault();setNotice('Submitted successfully.');};
-  return <div className="bg-[#F5F7F6] font-body-md text-on-surface antialiased"><div className="min-h-screen" onSubmit={handleSubmit}><header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-gray-200"><div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between"><div className="flex items-center gap-space-sm"><img alt="ReWaste Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZimPwqvNO5WBOD_Rr6DrxoFMG9U7zp-_fA8lYNGY_YUTus1BXwWVvqCq2vAkd1inpXBz7YGFuKubvo8a2k-YT6CEQst72AhHKNbk4Wov6WvbuvA_1JPsy564A0qOyka9DCmxpACzZ8OsJmOiTcvhVN8WirT4gjLSAaC1jNGwZHBweKLc4cOBIwvuml0rB5HGeCFdZwTwvsFkXyDjUlmBiMv4h54GnAgwiEpoFSVeDDqJHmQWBy0rbew"/><span className="font-headline-md text-headline-md tracking-tight text-primary font-bold hidden sm:inline-block">ReWaste</span></div><Navbar variant="Person" className="hidden md:flex items-center gap-gutter"><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/home">Home</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/societies">All Societies</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/my-society">My Society</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/exchange">Exchange</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/profile">Profile</Link></Navbar><div className="flex items-center gap-space-md"><button aria-label="Notifications" className="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span className="material-symbols-outlined text-headline-md">notifications</span></button><span className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">Person</span><div className="flex items-center"><img alt="Profile" className="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPgf1R8-C9KtO74b0DTwy8-hSJibHRzegzP7HZ2l7U_XyJaXe2XIJV1NvvNf8Yb3YyWBe-t9mtW_W0aaYglDw8zqDhXx2Qn3j9fP6s2nNL4cdjJsbeidTrZ-jbDDNjjjBy-_3Th_O8c8oKoTm_ihFtdU5TTYi8csrr-mD2LddOyEHyHzscf2nQOqnKgG8M790yl9XYy0F8BkDRzJL-g5Ia0Vn3M_hcoSDyK3EJqGaCI4BQTt25MJQJHQ"/></div></div></div></header><main className="w-full pt-16 bg-[#F5F7F6]"><div className="flex flex-col w-full">
-<div className="w-full max-w-7xl mx-auto px-6 py-8">
-<div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-<div>
-<div className="flex items-center gap-2 mb-2">
-<span className="font-label-sm text-label-sm text-primary uppercase tracking-widest bg-surface-container-high px-2.5 py-1 rounded-full">Audited Ledger</span>
-<span className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
-<span className="w-1.5 h-1.5 rounded-full bg-primary inline-block"></span> Synchronized Live
-          </span>
-</div>
-<h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight">My Exchange History</h1>
-<p className="font-body-md text-body-md text-on-surface-variant mt-1 max-w-2xl">
-          Consolidated audit trail of scrap trades, doorstep contributions, and credit disbursements.
-        </p>
-</div>
-<div className="flex items-center gap-3 self-start md:self-auto">
-<div className="bg-surface-container-low px-4 py-2 rounded-xl flex items-center gap-3 shadow-sm">
-<div className="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse"></div>
-<span className="font-label-md text-label-md text-on-surface-variant">Active Node: <span className="font-label-lg text-on-surface">Flat C-402</span></span>
-</div>
-</div>
-</div>
+const TYPE_ICON = { p2p: 'swap_horiz', contribution: 'local_shipping', payout: 'account_balance_wallet' };
 
-<div className="flex items-center gap-2 mb-6 p-1.5 bg-surface-container-low rounded-xl w-fit shadow-sm" id="filter-tabs">
-<button className="tab-btn px-5 py-2 rounded-lg font-label-lg text-label-lg transition-all bg-primary-container text-on-primary shadow-sm" type="button">
-        All
-      </button>
-<button className="tab-btn px-5 py-2 rounded-lg font-label-lg text-label-lg transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container" type="button">
-        P2P
-      </button>
-<button className="tab-btn px-5 py-2 rounded-lg font-label-lg text-label-lg transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container" type="button">
-        Contributions
-      </button>
-<button className="tab-btn px-5 py-2 rounded-lg font-label-lg text-label-lg transition-all text-on-surface-variant hover:text-on-surface hover:bg-surface-container" type="button">
-        Payouts
-      </button>
-</div>
+export default function History() {
+  const { state, me } = useApp();
+  const [filter, setFilter] = useState('all');
+  const [splitFor, setSplitFor] = useState(null);
+  const rows = state.personHistory.filter((h) => filter === 'all' || h.type === filter);
+  const count = (t) => state.personHistory.filter((h) => h.type === t).length;
 
-<div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-12">
-<div className="overflow-x-auto">
-<table className="w-full text-left" id="transaction-table">
-<thead>
-<tr className="bg-surface-container-low text-on-surface-variant font-label-md text-label-md tracking-wider">
-<th className="py-4 px-6 w-16" scope="col">Type</th>
-<th className="py-4 px-6 w-36" scope="col">Date</th>
-<th className="py-4 px-6" scope="col">Description</th>
-<th className="py-4 px-6 text-right w-44" scope="col">Amount / Weight</th>
-<th className="py-4 px-6 text-center w-36" scope="col">Status</th>
-<th className="py-4 px-6 text-right w-44" scope="col">Action</th>
-</tr>
-</thead>
-<tbody className="text-on-surface font-body-md text-body-md" id="table-body">
-
-<tr className="hover:bg-surface-container-lowest/60 transition-colors group">
-<td className="py-5 px-6 align-middle">
-<div className="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
-<span className="material-symbols-outlined text-headline-sm">swap_horiz</span>
-</div>
-</td>
-<td className="py-5 px-6 font-label-md text-label-md text-on-surface-variant align-middle whitespace-nowrap">
-                Oct 24, 2025
-              </td>
-<td className="py-5 px-6 align-middle">
-<div className="flex flex-col">
-<span className="font-headline-sm text-headline-sm text-on-surface">Lot #EX-4092: Household E-Waste (Sold to Ramesh Kumar)</span>
-<span className="font-body-sm text-body-sm text-on-surface-variant">Direct peer trade • Handover confirmed at Block C hub</span>
-</div>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<span className="font-headline-sm text-headline-sm text-primary">+$26.50</span>
-</td>
-<td className="py-5 px-6 text-center align-middle whitespace-nowrap">
-<span className="inline-flex items-center px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-container-low text-primary">
-                  Completed
-                </span>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<span className="font-label-md text-label-md text-outline">—</span>
-</td>
-</tr>
-
-<tr className="bg-surface-container-low/40 hover:bg-surface-container-lowest transition-colors group">
-<td className="py-5 px-6 align-middle">
-<div className="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
-<span className="material-symbols-outlined text-headline-sm">local_shipping</span>
-</div>
-</td>
-<td className="py-5 px-6 font-label-md text-label-md text-on-surface-variant align-middle whitespace-nowrap">
-                Oct 20, 2025
-              </td>
-<td className="py-5 px-6 align-middle">
-<div className="flex flex-col">
-<span className="font-headline-sm text-headline-sm text-on-surface">Doorstep Weigh-in: Compost / Wet Waste</span>
-<span className="font-body-sm text-body-sm text-on-surface-variant">Daily municipal green bin collection • Route #04</span>
-</div>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<span className="font-headline-sm text-headline-sm text-on-surface">14.2 kg</span>
-</td>
-<td className="py-5 px-6 text-center align-middle whitespace-nowrap">
-<span className="inline-flex items-center px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-container-low text-primary">
-                  Verified
-                </span>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<span className="font-label-md text-label-md text-outline">—</span>
-</td>
-</tr>
-
-<tr className="hover:bg-surface-container-lowest transition-colors group">
-<td className="py-5 px-6 align-middle">
-<div className="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
-<span className="material-symbols-outlined text-headline-sm">account_balance_wallet</span>
-</div>
-</td>
-<td className="py-5 px-6 font-label-md text-label-md text-on-surface-variant align-middle whitespace-nowrap">
-                Oct 15, 2025
-              </td>
-<td className="py-5 px-6 align-middle">
-<div className="flex flex-col">
-<span className="font-headline-sm text-headline-sm text-on-surface">Q3 Society Maintenance Credit Payout</span>
-<span className="font-body-sm text-body-sm text-on-surface-variant">Batch #DISB-2025-1015 • Shared communal recyclable fund</span>
-</div>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<span className="font-headline-sm text-headline-sm text-primary">+$18.50 Credit</span>
-</td>
-<td className="py-5 px-6 text-center align-middle whitespace-nowrap">
-<span className="inline-flex items-center px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-container-low text-primary">
-                  Disbursed
-                </span>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-label-md text-label-md text-primary bg-surface-container-low hover:bg-primary hover:text-on-primary transition-all shadow-sm" type="button">
-<span>View Split Details</span>
-<span className="material-symbols-outlined text-body-sm">arrow_forward</span>
-</button>
-</td>
-</tr>
-
-<tr className="bg-surface-container-low/40 hover:bg-surface-container-lowest transition-colors group">
-<td className="py-5 px-6 align-middle">
-<div className="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary-container group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
-<span className="material-symbols-outlined text-headline-sm">inventory_2</span>
-</div>
-</td>
-<td className="py-5 px-6 font-label-md text-label-md text-on-surface-variant align-middle whitespace-nowrap">
-                Oct 08, 2025
-              </td>
-<td className="py-5 px-6 align-middle">
-<div className="flex flex-col">
-<span className="font-headline-sm text-headline-sm text-on-surface">Doorstep Weigh-in: Dry Recyclables</span>
-<span className="font-body-sm text-body-sm text-on-surface-variant">Cardboard &amp; HDPE containers certified</span>
-</div>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<span className="font-headline-sm text-headline-sm text-on-surface">8.4 kg</span>
-</td>
-<td className="py-5 px-6 text-center align-middle whitespace-nowrap">
-<span className="inline-flex items-center px-3 py-1 rounded-full font-label-sm text-label-sm bg-surface-container-low text-primary">
-                  Verified
-                </span>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<span className="font-label-md text-label-md text-outline">—</span>
-</td>
-</tr>
-
-<tr className="hover:bg-surface-container-lowest transition-colors group">
-<td className="py-5 px-6 align-middle">
-<div className="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
-<span className="material-symbols-outlined text-headline-sm">payments</span>
-</div>
-</td>
-<td className="py-5 px-6 font-label-md text-label-md text-on-surface-variant align-middle whitespace-nowrap">
-                Sep 30, 2025
-              </td>
-<td className="py-5 px-6 align-middle">
-<div className="flex flex-col">
-<span className="font-headline-sm text-headline-sm text-on-surface">Bi-weekly Society Scrap Escrow Share</span>
-<span className="font-body-sm text-body-sm text-on-surface-variant">September settlement cycle #ESC-902</span>
-</div>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<span className="font-headline-sm text-headline-sm text-primary">+$15.20 Credit</span>
-</td>
-<td className="py-5 px-6 text-center align-middle whitespace-nowrap">
-<span className="inline-flex items-center px-3 py-1 rounded-full font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed">
-                  Disbursed
-                </span>
-</td>
-<td className="py-5 px-6 text-right align-middle whitespace-nowrap">
-<button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-label-md text-label-md text-primary bg-surface-container-low hover:bg-primary hover:text-on-primary transition-all shadow-sm" type="button">
-<span>View Split Details</span>
-<span className="material-symbols-outlined text-body-sm">arrow_forward</span>
-</button>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-<div className="hidden py-16 text-center" id="no-results-msg">
-<span className="material-symbols-outlined text-headline-xl text-outline-variant">find_in_page</span>
-<p className="font-headline-sm text-headline-sm text-on-surface mt-2">No matching transactions</p>
-<p className="font-body-sm text-body-sm text-on-surface-variant">There are no records in this selected transaction category.</p>
-</div>
-</div>
-</div>
-
-<div className="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm hidden p-4" id="payment-split-modal">
-<div className="bg-surface-container-lowest rounded-xl shadow-xl w-full max-w-3xl overflow-hidden animate-in fade-in zoom-in duration-150">
-
-<div className="px-6 py-5 bg-surface-container flex items-start justify-between">
-<div>
-<div className="flex items-center gap-2 mb-1">
-<span className="w-2 h-2 rounded-full bg-primary-container"></span>
-<span className="font-label-sm text-label-sm uppercase tracking-wider text-primary">Proportional Reconciliation</span>
-</div>
-<h2 className="font-headline-lg text-headline-lg text-on-surface">Payment Split Ledger — Q3 Maintenance Credit</h2>
-<p className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-            Disbursement batch #DISB-2025-1015 • Total Escrow: $240.00
-          </p>
-</div>
-<button aria-label="Close dialog" className="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" type="button">
-<span className="material-symbols-outlined text-headline-sm">close</span>
-</button>
-</div>
-
-<div className="p-6">
-<div className="rounded-xl overflow-hidden bg-surface-container-low">
-<table className="w-full text-left">
-<thead>
-<tr className="bg-surface-container-high text-on-surface-variant font-label-md text-label-md tracking-wider">
-<th className="py-3 px-4" scope="col">Resident Name</th>
-<th className="py-3 px-4" scope="col">Flat / Node</th>
-<th className="py-3 px-4 text-right" scope="col">Weight Contributed (kg)</th>
-<th className="py-3 px-4 text-right" scope="col">Net Share Amount</th>
-</tr>
-</thead>
-<tbody className="font-body-md text-body-md text-on-surface">
-
-<tr className="bg-surface-container-lowest font-semibold">
-<td className="py-3 px-4 flex items-center gap-2">
-<span className="w-2 h-2 rounded-full bg-primary"></span>
-<span className="text-primary">Ananya Sharma (You)</span>
-</td>
-<td className="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant">Flat C-402</td>
-<td className="py-3 px-4 text-right font-headline-sm text-headline-sm">114.5 kg</td>
-<td className="py-3 px-4 text-right font-headline-sm text-headline-sm text-primary">$18.50</td>
-</tr>
-
-<tr className="hover:bg-surface-container transition-colors">
-<td className="py-3 px-4">Rajesh Gupta</td>
-<td className="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant">Flat A-101</td>
-<td className="py-3 px-4 text-right">96.0 kg</td>
-<td className="py-3 px-4 text-right">$15.50</td>
-</tr>
-
-<tr className="bg-surface-container-lowest/50 hover:bg-surface-container transition-colors">
-<td className="py-3 px-4">Sunita Verma</td>
-<td className="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant">Flat B-204</td>
-<td className="py-3 px-4 text-right">142.0 kg</td>
-<td className="py-3 px-4 text-right">$23.00</td>
-</tr>
-
-<tr className="hover:bg-surface-container transition-colors">
-<td className="py-3 px-4">Vikram Malhotra</td>
-<td className="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant">Flat C-102</td>
-<td className="py-3 px-4 text-right">108.0 kg</td>
-<td className="py-3 px-4 text-right">$17.40</td>
-</tr>
-
-<tr className="bg-surface-container-lowest/50 hover:bg-surface-container transition-colors">
-<td className="py-3 px-4 text-on-surface-variant italic">Remaining 18 Residents</td>
-<td className="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant">Various</td>
-<td className="py-3 px-4 text-right">1,023.5 kg</td>
-<td className="py-3 px-4 text-right">$165.60</td>
-</tr>
-</tbody>
-
-<tfoot>
-<tr className="bg-surface-container-high font-headline-sm text-headline-sm text-on-surface">
-<td className="py-4 px-4 font-bold text-primary">Total Reconciled</td>
-<td className="py-4 px-4 font-label-md text-label-md text-on-surface-variant">22 Households</td>
-<td className="py-4 px-4 text-right font-bold">1,484.0 kg</td>
-<td className="py-4 px-4 text-right font-bold text-primary">$240.00</td>
-</tr>
-</tfoot>
-</table>
-</div>
-<div className="mt-4 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm px-1">
-<div className="flex items-center gap-1.5">
-<span className="material-symbols-outlined text-label-md text-primary">verified</span>
-<span>Allocated based on weigh-in proportion to total society mass collected</span>
-</div>
-<span className="font-label-sm text-label-sm">Audited by ReWaste Circular Ledger</span>
-</div>
-</div>
-
-<div className="px-6 py-4 bg-surface-container-low flex justify-end">
-<button className="px-6 py-2 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg hover:bg-primary transition-all shadow-sm" type="button">
-          Close Ledger
-        </button>
-</div>
-</div>
-</div>
-
-</div></main><footer className="w-full bg-white border-t border-gray-200 mt-auto"><div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant font-body-sm text-body-sm"><p>© 2025 ReWaste Materials Ledger. All rights reserved.</p><div className="flex items-center gap-gutter"><span className="font-label-md text-label-md text-outline">Operational Circular Network</span></div></div></footer><div aria-live="polite">{notice}</div></div></div>;
+  return (
+    <main className="page stack">
+      <PageHeader eyebrow="Audited Ledger • Synchronized Live" title="My Exchange History" subtitle="Consolidated audit trail of scrap trades, doorstep contributions, and credit disbursements."
+        actions={<Badge tone="neutral" icon="home">Active Node: {me.flat}</Badge>} />
+      <Pills value={filter} onChange={setFilter} options={[{ value: 'all', label: 'All', count: state.personHistory.length }, { value: 'p2p', label: 'P2P', count: count('p2p') }, { value: 'contribution', label: 'Contributions', count: count('contribution') }, { value: 'payout', label: 'Payouts', count: count('payout') }]} />
+      <section className="card !p-0">
+        {rows.length === 0 ? <EmptyState icon="find_in_page" title="No matching transactions" text="There are no records in this selected transaction category." /> : (
+          <div className="overflow-x-auto">
+            <table className="tbl">
+              <thead><tr><th>Type</th><th>Date</th><th>Description</th><th className="text-right">Amount / Weight</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody>
+                {rows.map((h) => (
+                  <tr key={h.id}>
+                    <td><span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-container-low text-primary-container"><Icon name={TYPE_ICON[h.type]} size={20} /></span></td>
+                    <td className="whitespace-nowrap">{h.date}</td>
+                    <td className="min-w-64"><p className="font-label-lg text-label-lg">{h.title}</p><p className="text-body-sm text-on-surface-variant">{h.sub}</p></td>
+                    <td className={`whitespace-nowrap text-right font-label-lg ${h.amount.startsWith('+') ? 'text-primary' : ''}`}>{h.amount}</td>
+                    <td><StatusBadge status={h.status} /></td>
+                    <td>{h.paymentId ? <button type="button" className="btn-secondary btn-sm" onClick={() => setSplitFor(state.payments.find((p) => p.id === h.paymentId))}>View Split Details<Icon name="arrow_forward" size={16} /></button> : <span className="text-outline">—</span>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+      <SplitModal payment={splitFor} onClose={() => setSplitFor(null)} title="Payment Split Ledger" subtitle={splitFor && `Disbursement batch #${splitFor.batch} • Total escrow: ${inr(splitFor.amount, 2)}`} />
+    </main>
+  );
 }

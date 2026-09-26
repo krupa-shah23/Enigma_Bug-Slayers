@@ -1,103 +1,61 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar } from '../../components/index.jsx';
+import { Link, useParams } from 'react-router-dom';
+import { useApp } from '../../state/AppState.jsx';
+import { Badge, EmptyState, Gauge, Icon } from '../../components/ui.jsx';
+import { trustTier } from '../../lib/format.js';
 
-export default function SocietyDetail(){
-  const [notice,setNotice]=useState('');
-  const handleSubmit=(event)=>{event.preventDefault();setNotice('Submitted successfully.');};
-  return <div className="bg-[#F5F7F6] font-body-md text-on-surface antialiased"><div className="min-h-screen" onSubmit={handleSubmit}><header className="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-gray-200"><div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between"><div className="flex items-center gap-space-sm"><img alt="ReWaste Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZimPwqvNO5WBOD_Rr6DrxoFMG9U7zp-_fA8lYNGY_YUTus1BXwWVvqCq2vAkd1inpXBz7YGFuKubvo8a2k-YT6CEQst72AhHKNbk4Wov6WvbuvA_1JPsy564A0qOyka9DCmxpACzZ8OsJmOiTcvhVN8WirT4gjLSAaC1jNGwZHBweKLc4cOBIwvuml0rB5HGeCFdZwTwvsFkXyDjUlmBiMv4h54GnAgwiEpoFSVeDDqJHmQWBy0rbew"/><span className="font-headline-md text-headline-md tracking-tight text-primary font-bold hidden sm:inline-block">ReWaste</span></div><Navbar variant="Person" className="hidden md:flex items-center gap-gutter"><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/home">Home</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/societies">All Societies</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/my-society">My Society</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/exchange">Exchange</Link><Link className="font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors py-1" to="/profile">Profile</Link></Navbar><div className="flex items-center gap-space-md"><button aria-label="Notifications" className="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span className="material-symbols-outlined text-headline-md">notifications</span></button><span className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-space-sm py-0.5 rounded-full font-label-sm text-label-sm">Person</span><div className="flex items-center"><img alt="Profile" className="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPgf1R8-C9KtO74b0DTwy8-hSJibHRzegzP7HZ2l7U_XyJaXe2XIJV1NvvNf8Yb3YyWBe-t9mtW_W0aaYglDw8zqDhXx2Qn3j9fP6s2nNL4cdjJsbeidTrZ-jbDDNjjjBy-_3Th_O8c8oKoTm_ihFtdU5TTYi8csrr-mD2LddOyEHyHzscf2nQOqnKgG8M790yl9XYy0F8BkDRzJL-g5Ia0Vn3M_hcoSDyK3EJqGaCI4BQTt25MJQJHQ"/></div></div></div></header><main className="w-full pt-16 bg-[#F5F7F6]"><div className="flex flex-col w-full">
-<div className="w-full max-w-5xl mx-auto px-6 py-8 sm:py-12 flex flex-col gap-8">
+const Fact = ({ icon, label, value, note }) => (
+  <div className="flex items-start gap-space-md rounded-xl bg-surface-container-low/60 p-space-md">
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-primary-container"><Icon name={icon} size={22} fill /></span>
+    <div><p className="eyebrow">{label}</p><p className="font-headline-sm text-headline-sm">{value}</p><p className="text-body-sm text-on-surface-variant">{note}</p></div>
+  </div>
+);
 
-<Navbar variant="Person" className="flex items-center">
-<Link className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary-container font-label-lg text-label-lg transition-colors group" to="/societies">
-<span className="material-symbols-outlined text-headline-sm transition-transform group-hover:-translate-x-1">arrow_back</span>
-<span>Back to All Societies</span>
-</Link>
-</Navbar>
+export default function SocietyDetail() {
+  const { id } = useParams();
+  const { state, actions } = useApp();
+  const s = state.societies.find((x) => x.id === id);
+  if (!s) {
+    return <main className="page-narrow"><div className="card"><EmptyState icon="apartment" title="Society not found" text="This society isn't registered on the network." /><div className="flex justify-center"><Link to="/societies" className="btn-primary">Back to All Societies</Link></div></div></main>;
+  }
+  const mine = s.id === 'gvh';
+  const requested = state.joinRequests.includes(s.id);
 
-<div className="w-full bg-surface-container-lowest rounded-xl shadow-sm p-6 sm:p-10 flex flex-col gap-10">
-
-<div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-<div className="flex flex-col gap-2">
-<div className="inline-flex items-center gap-2">
-<span className="px-2.5 py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm">Cooperative Hub</span>
-<span className="inline-flex items-center gap-1 text-primary font-label-sm text-label-sm">
-<span className="material-symbols-outlined text-[16px]" style={{fontVariationSettings: "'FILL' 1"}}>verified</span>
-              Certified Network
-            </span>
-</div>
-<h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight">Crestview Towers</h1>
-<p className="inline-flex items-center gap-1.5 text-on-surface-variant font-body-md text-body-md">
-<span className="material-symbols-outlined text-headline-sm text-outline">location_on</span>
-            Sector 54, Golf Course Extension, Gurugram
-          </p>
-</div>
-
-<div className="flex items-center gap-4 bg-surface-container-low p-4 rounded-xl self-start md:self-auto">
-<div className="relative w-16 h-16 flex items-center justify-center">
-<svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-<path className="text-surface-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5"></path>
-<path className="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="96, 100" strokeLinecap="round" strokeWidth="3.5"></path>
-</svg>
-<span className="absolute font-headline-md text-headline-md text-primary font-bold">96</span>
-</div>
-<div className="flex flex-col">
-<span className="font-label-md text-label-md text-on-surface-variant">Trust Score</span>
-<span className="font-label-lg text-label-lg text-on-surface font-semibold">96/100</span>
-<span className="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary">
-<span className="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-              Tier A - Verified
-            </span>
-</div>
-</div>
-</div>
-
-<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-<div className="bg-surface-container-low p-5 rounded-xl flex items-start gap-4 transition-all">
-<div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary-container shadow-sm shrink-0">
-<span className="material-symbols-outlined text-headline-md">calendar_today</span>
-</div>
-<div className="flex flex-col">
-<span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Pickup Schedule</span>
-<span className="font-headline-sm text-headline-sm text-on-surface font-semibold mt-0.5">Bi-weekly</span>
-<span className="font-body-sm text-body-sm text-on-surface-variant">Scheduled cycle</span>
-</div>
-</div>
-
-<div className="bg-surface-container-low p-5 rounded-xl flex items-start gap-4 transition-all">
-<div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary-container shadow-sm shrink-0">
-<span className="material-symbols-outlined text-headline-md">group</span>
-</div>
-<div className="flex flex-col">
-<span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Community Base</span>
-<span className="font-headline-sm text-headline-sm text-on-surface font-semibold mt-0.5">380 Registered Households</span>
-<span className="font-body-sm text-body-sm text-on-surface-variant">Active segregation</span>
-</div>
-</div>
-
-<div className="bg-surface-container-low p-5 rounded-xl flex items-start gap-4 transition-all">
-<div className="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary-container shadow-sm shrink-0">
-<span className="material-symbols-outlined text-headline-md">assignment_turned_in</span>
-</div>
-<div className="flex flex-col">
-<span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Circular Traceability</span>
-<span className="font-headline-sm text-headline-sm text-on-surface font-semibold mt-0.5">5 Active Municipal &amp; Upcycling Contracts</span>
-<span className="font-body-sm text-body-sm text-on-surface-variant">Direct processing</span>
-</div>
-</div>
-</div>
-
-<div className="flex flex-col items-center gap-3 pt-4">
-<button className="w-full bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg h-12 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm" type="button">
-<span className="material-symbols-outlined text-headline-sm">how_to_reg</span>
-<span>Join This Society</span>
-</button>
-<p className="font-body-sm text-body-sm text-on-surface-variant text-center">
-          Currently unassigned resident? Request society membership
-        </p>
-</div>
-</div>
-</div>
-</div></main><footer className="w-full bg-white border-t border-gray-200 mt-auto"><div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant font-body-sm text-body-sm"><p>© 2025 ReWaste Materials Ledger. All rights reserved.</p><div className="flex items-center gap-gutter"><span className="font-label-md text-label-md text-outline">Operational Circular Network</span></div></div></footer><div aria-live="polite">{notice}</div></div></div>;
+  return (
+    <main className="page-narrow stack">
+      <Link to="/societies" className="inline-flex items-center gap-space-xs font-label-lg text-label-lg text-on-surface-variant hover:text-primary"><Icon name="arrow_back" size={18} />Back to All Societies</Link>
+      <section className="card stack">
+        <div className="flex flex-col justify-between gap-space-md sm:flex-row sm:items-start">
+          <div className="space-y-space-sm">
+            <Badge tone="success" icon="verified">{s.trust == null ? 'Newly Registered' : 'Certified Network'}</Badge>
+            <h1 className="h-title">{s.name}</h1>
+            <p className="flex items-center gap-1.5 text-body-md text-on-surface-variant"><Icon name="location_on" size={18} />{s.address}, {s.city}</p>
+          </div>
+          <div className="flex items-center gap-space-md rounded-xl border border-outline-variant/40 px-space-md py-space-sm">
+            <Gauge value={s.trust ?? 0} label={s.trust ?? '—'} />
+            <div><p className="eyebrow">Trust Score</p><p className="font-headline-sm text-headline-sm">{s.trust == null ? 'Not yet rated' : `${s.trust}/100`}</p><p className="text-body-sm text-primary">{trustTier(s.trust)}{s.trust != null && ' - Verified'}</p></div>
+          </div>
+        </div>
+        <div className="grid gap-space-md md:grid-cols-3">
+          <Fact icon="calendar_today" label="Pickup Schedule" value={s.freq} note="Scheduled cycle" />
+          <Fact icon="group" label="Community Base" value={`${s.households} Registered Households`} note="Active segregation" />
+          <Fact icon="assignment_turned_in" label="Circular Traceability" value={`${s.contracts} Active Municipal & Upcycling Contracts`} note="Direct processing" />
+        </div>
+        <div className="flex flex-col items-start justify-between gap-space-md border-t border-outline-variant/40 pt-space-lg sm:flex-row sm:items-center">
+          {mine ? (
+            <>
+              <p className="muted">This is your society. Manage collections, contracts and committee details.</p>
+              <Link to="/my-society" className="btn-primary"><Icon name="apartment" size={18} />Go to My Society</Link>
+            </>
+          ) : (
+            <>
+              <p className="muted">Currently unassigned resident? Request society membership.</p>
+              <button type="button" disabled={requested} onClick={() => actions.joinSociety(s.id)} className="btn-primary">
+                <Icon name={requested ? 'schedule_send' : 'how_to_reg'} size={18} />{requested ? 'Request Sent' : 'Join This Society'}
+              </button>
+            </>
+          )}
+        </div>
+      </section>
+    </main>
+  );
 }
