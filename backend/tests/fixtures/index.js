@@ -56,6 +56,7 @@ async function seedSociety(overrides = {}) {
     location: { lat: MUMBAI.lat + n * 0.01, lng: MUMBAI.lng },
     zoneId: 'mumbai',
     collectionFrequency: 'monthly',
+    nextCollectionDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     ...overrides,
     cpId,
   });

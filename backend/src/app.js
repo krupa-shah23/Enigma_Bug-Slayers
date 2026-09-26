@@ -35,7 +35,7 @@ app.use(
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/uploads', require('./routes/uploads'));
 app.use('/api/config', require('./routes/config'));
-// Step 7:  app.use('/api/societies',   require('./routes/societies'));
+app.use('/api/societies', require('./routes/societies'));
 // Step 8:  app.use('/api/contributions', require('./routes/contributions'));
 // Step 10: app.use('/api/p2p',         require('./routes/p2p'));
 // Step 10: app.use('/api/bhangarwala', require('./routes/bhangarwala'));

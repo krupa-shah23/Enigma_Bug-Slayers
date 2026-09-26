@@ -53,4 +53,4 @@ function festivalSuggestion(nextDate, calendar) {
   return { festivalName: f.name, suggestedDate: addDays(f.date, f.shiftDays) };
 }
 
-module.exports = { nextCollectionDate, festivalSuggestion };
+module.exports = { toUtcDay, nextCollectionDate, festivalSuggestion };
